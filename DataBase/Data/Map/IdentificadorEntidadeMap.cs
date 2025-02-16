@@ -1,22 +1,22 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Modelos.EF.Revenda;
+using Modelos.EF.Entidade;
 
 namespace DataBase.Data.Map
 {
-    public class RevendaMap : IEntityTypeConfiguration<RevendaModel>
+    public class IdentificadorEntidadeMap : IEntityTypeConfiguration<IdentificadorEntidadeModel>
     {
-        public void Configure(EntityTypeBuilder<RevendaModel> bld)
+        public void Configure(EntityTypeBuilder<IdentificadorEntidadeModel> bld)
         {
             bld.HasKey(x => x.Id);
 
-            // Define um relacionamento obrigatório com a Entidade
+            // Relacionamento com Entidade
             bld.HasOne(x => x.Entidade)
                 .WithMany()
                 .HasForeignKey(x => x.EntidadeId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
-            bld.Property(x => x.Situacao).IsRequired();
+            bld.Property(x => x.CNPJ_CPF).IsRequired().HasMaxLength(18);
             bld.Property(x => x.DataCriacao).IsRequired();
         }
     }

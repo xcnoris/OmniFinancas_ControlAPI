@@ -1,6 +1,7 @@
 using DataBase.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Modelos.EF.Login;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<MyServiceStoreDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
+//Configura o Identity com as opções padrão
+builder.Services.AddIdentity<UserLogin, IdentityRole>()
+    .AddEntityFrameworkStores<MyServiceStoreDBContext>()
+    .AddDefaultTokenProviders();
 
 // Outras configurações
 builder.Services.Configure<IdentityOptions>(options =>
@@ -38,7 +45,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
+app.UseCors("AllowAllOrigins");
+
+// Outras configurações e ma
+
+app.UseRouting(); // Adiciona suporte ao roteamento
+app.UseAuthentication(); // Adiciona middleware de autenticação
+app.UseAuthorization(); // Adiciona middleware de autorização
 
 app.MapControllers();
 

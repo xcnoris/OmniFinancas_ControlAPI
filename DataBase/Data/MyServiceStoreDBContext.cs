@@ -1,8 +1,9 @@
 ﻿using DataBase.Data.DataBase;
 using DataBase.Data.Map;
-
 using Microsoft.EntityFrameworkCore;
 using Modelos.EF;
+using Modelos.EF.Entidade;
+using Modelos.EF.Revenda;
 
 namespace DataBase.Data
 {
@@ -23,11 +24,21 @@ namespace DataBase.Data
             _connectionString = conexao.Carregarbanco();
         }
 
-        public DbSet<RevendaModel> Revenda { get; set; }
+        // DbSets - Tabelas do banco
+        public DbSet<RevendaModel> Revendas { get; set; }
+        public DbSet<UsuariosRevendaModel> UsuariosRevendas { get; set; }
+        public DbSet<EntidadeModel> Entidades { get; set; }
+        public DbSet<IdentificadorEntidadeModel> IdentificadoresEntidade { get; set; }
+        public DbSet<ClientesModel> Clientes { get; set; }
+        public DbSet<UserLogin> UserLogins { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        { 
+        {
+            // Aplicando os mapeamentos das entidades
             modelBuilder.ApplyConfiguration(new RevendaMap());
-
+            modelBuilder.ApplyConfiguration(new UsuariosRevendaMap());
+            modelBuilder.ApplyConfiguration(new EntidadeMap());
+            modelBuilder.ApplyConfiguration(new IdentificadorEntidadeMap());
+            modelBuilder.ApplyConfiguration(new ClientesMap());
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

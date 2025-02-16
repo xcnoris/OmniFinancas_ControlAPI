@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API Central", "API Central\API Central.csproj", "{AAC41491-63D3-4EE3-B804-030FFF3EA825}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APICentral", "API Central\APICentral.csproj", "{AAC41491-63D3-4EE3-B804-030FFF3EA825}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataBase", "..\DataBase\DataBase.csproj", "{161E49BA-B95D-4B74-90C9-39C4F7B6721D}"
 EndProject
