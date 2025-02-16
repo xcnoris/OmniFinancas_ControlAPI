@@ -1,6 +1,26 @@
+using DataBase.Data;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+// Adiciona o serviço ao contêiner de injeção de dependência.
+// Configura o DbContext 'Context' para utilizar o SQL Server como banco de dados,
+// especificando a string de conexão 'DefaultConnection' arquivo de configuração (appsettings.json).
+
+builder.Services.AddDbContext<MyServiceStoreDBContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Outras configurações
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    // Configurações adicionais para o Identity
+    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+ ";
+    options.User.RequireUniqueEmail = true; // Exemplo: requer que o e-mail seja único
+});
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
