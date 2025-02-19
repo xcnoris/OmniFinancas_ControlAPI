@@ -10,15 +10,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Adiciona o serviço ao contêiner de injeção de dependência.
 // Configura o DbContext 'Context' para utilizar o SQL Server como banco de dados,
 // especificando a string de conexão 'DefaultConnection' arquivo de configuração (appsettings.json).
-
 builder.Services.AddDbContext<MyServiceStoreDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
-//Configura o Identity com as opções padrão
-builder.Services.AddIdentity<UserLogin, IdentityRole>()
-    .AddEntityFrameworkStores<MyServiceStoreDBContext>()
-    .AddDefaultTokenProviders();
 
 // Outras configurações
 builder.Services.Configure<IdentityOptions>(options =>

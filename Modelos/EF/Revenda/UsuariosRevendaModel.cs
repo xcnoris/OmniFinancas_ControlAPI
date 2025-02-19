@@ -23,8 +23,8 @@ namespace Modelos.EF.Revenda
         public int EntidadeId { get; set; }
         public virtual EntidadeModel? Entidade { get; set; }
 
-        public int UsuarioLoginId { get; set; }
-        public virtual UserLogin? UsuarioLogin { get; set; }
+        //public int UsuarioLoginId { get; set; }
+        //public virtual UserLoginModel? UsuarioLogin { get; set; }
 
         public Situacao Situacao { get; set; }
         public DateTime DataCriacao { get; set; }

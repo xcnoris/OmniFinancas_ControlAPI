@@ -22,11 +22,11 @@ namespace DataBase.Data.Map
                 .HasForeignKey(x => x.EntidadeId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Relacionamento com o login do usuário
-            bld.HasOne(x => x.UsuarioLogin)
-                .WithMany()
-                .HasForeignKey(x => x.UsuarioLoginId)
-                .OnDelete(DeleteBehavior.Cascade);
+            //// Relacionamento com o login do usuário
+            //bld.HasOne(x => x.UsuarioLogin)
+            //    .WithMany()
+            //    .HasForeignKey(x => x.UsuarioLoginId)
+            //    .OnDelete(DeleteBehavior.Cascade);
 
             bld.Property(x => x.Situacao).IsRequired();
             bld.Property(x => x.DataCriacao).IsRequired();
