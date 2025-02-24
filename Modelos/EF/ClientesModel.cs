@@ -1,4 +1,5 @@
 ﻿using Modelos.EF.Entidade;
+using Modelos.EF.Lincenca;
 using Modelos.EF.Revenda;
 using Modelos.Enuns;
 
@@ -16,6 +17,10 @@ namespace Modelos.EF
 
         public Situacao Situacao { get; set; }
         public DateTime DataCriacao { get; set; }
+
+
+        public List<LicencaModel> Licencas { get; set; } = new();
+
 
     }
 }

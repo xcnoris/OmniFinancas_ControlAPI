@@ -1,4 +1,5 @@
 ﻿using Modelos.EF.Entidade;
+using Modelos.EF.Lincenca;
 using Modelos.Enuns;
 
 namespace Modelos.EF.Revenda
@@ -13,6 +14,7 @@ namespace Modelos.EF.Revenda
             }
         }
 
+
         public int Id { get; set; }
 
         // Nesse caso vai ser uma entidade com o tipo Juridica
@@ -21,6 +23,7 @@ namespace Modelos.EF.Revenda
 
         public Situacao Situacao { get; set; }
         public DateTime DataCriacao { get; set; }
+
 
 
         public List<UsuariosRevendaModel> UsuarioRevendaList { get; set; } = new();

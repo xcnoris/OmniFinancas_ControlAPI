@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Modelos.EF;
 using Modelos.EF.Entidade;
-using Modelos.EF.Login;
+using Modelos.EF.Lincenca;
 using Modelos.EF.Revenda;
 
 namespace DataBase.Data
@@ -12,28 +12,32 @@ namespace DataBase.Data
 
         // DbSets - Tabelas do banco
         public DbSet<RevendaModel> Revendas { get; set; }
-        public DbSet<UsuariosRevendaModel> UsuariosRevendas { get; set; }
+        public DbSet<UsuariosRevendaModel> Usuarios_Revendas { get; set; }
         public DbSet<EntidadeModel> Entidades { get; set; }
-        public DbSet<IdentificadorEntidadeModel> IdentificadoresEntidade { get; set; }
+        public DbSet<IdentificadorEntidadeModel> Identificadores_Entidade { get; set; }
         public DbSet<ClientesModel> Clientes { get; set; }
+        public DbSet<SoftwaresModel> Softwares { get; set; }
+        public DbSet<PlanosLicencaModel> Planos_Licenca { get; set; }
+        public DbSet<LicencaModel> Licencas { get; set; }
 
 
         // Construtor que aceita DbContextOptions
         public MyServiceStoreDBContext(DbContextOptions<MyServiceStoreDBContext> options)
              : base(options) { }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder mb)
         {
-            base.OnModelCreating(modelBuilder); // Chama o mét1odo base para garantir a configuração padrão do Identity
+            base.OnModelCreating(mb); // Chama o mét1odo base para garantir a configuração padrão do Identity
 
             // Aplicando os mapeamentos das entidades
-            modelBuilder.ApplyConfiguration(new RevendaMap());
-            modelBuilder.ApplyConfiguration(new UsuariosRevendaMap());
-            modelBuilder.ApplyConfiguration(new EntidadeMap());
-            modelBuilder.ApplyConfiguration(new IdentificadorEntidadeMap());
-            modelBuilder.ApplyConfiguration(new ClientesMap());
-
+            mb.ApplyConfiguration(new RevendaMap());
+            mb.ApplyConfiguration(new UsuariosRevendaMap());
+            mb.ApplyConfiguration(new EntidadeMap());
+            mb.ApplyConfiguration(new IdentificadorEntidadeMap());
+            mb.ApplyConfiguration(new ClientesMap());
+            mb.ApplyConfiguration(new SoftwareMap());
+            mb.ApplyConfiguration(new PlanoLicencaMap());
+            mb.ApplyConfiguration(new LicencaMap()); 
         }
-
     }
 }
