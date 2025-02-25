@@ -24,9 +24,6 @@ namespace API_Central.Controllers
             _dalSoftwares = dalSoftware;
             _dalRevenda = dalRevenda;
         }
-
-
-
        
         [HttpPost]
         public async Task<ActionResult<SoftwaresModel>> CriarSoftware([FromBody] CriarSoftware SoftwareRequest)
