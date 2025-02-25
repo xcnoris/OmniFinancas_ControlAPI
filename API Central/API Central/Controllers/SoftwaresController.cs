@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Modelos.EF;
 using Modelos.EF.Revenda;
+using Modelos.ModelosRequest.Licenca;
 using Modelos.ModelosRequest.Software;
 using System.ComponentModel.DataAnnotations;
 using System.Xml;
@@ -26,25 +27,7 @@ namespace API_Central.Controllers
 
 
 
-        [HttpGet("BuscarTodos")]
-        public async Task<ActionResult<IEnumerable<SoftwaresModel>>> GetXmls()
-        {
-            try
-            {
-                IEnumerable<SoftwaresModel?> xmls = await _dalSoftwares.ListarAsync();
-                return Ok(xmls);
-            }
-            catch (ValidationException ex)
-            {
-                return BadRequest($"Erro: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                // Retorna um erro genérico com a mensagem da exceção
-                return StatusCode(500, $"Erro ao tentar buscar a entidade. {ex.Message}");
-            }
-        }
-
+       
         [HttpPost]
         public async Task<ActionResult<SoftwaresModel>> CriarSoftware([FromBody] CriarSoftware SoftwareRequest)
         {
@@ -88,6 +71,25 @@ namespace API_Central.Controllers
                 return StatusCode(500, $"Erro ao tentar adicionar a entidade. {ex.Message}");
             }
 
+        }
+
+        [HttpGet("BuscarTodos")]
+        public async Task<ActionResult<IEnumerable<SoftwaresModel>>> GetXmls()
+        {
+            try
+            {
+                IEnumerable<SoftwaresModel?> xmls = await _dalSoftwares.ListarAsync();
+                return Ok(xmls);
+            }
+            catch (ValidationException ex)
+            {
+                return BadRequest($"Erro: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                // Retorna um erro genérico com a mensagem da exceção
+                return StatusCode(500, $"Erro ao tentar buscar a entidade. {ex.Message}");
+            }
         }
 
 
@@ -183,7 +185,7 @@ namespace API_Central.Controllers
             }
         }
 
-        [HttpDelete("/{id}")]
+        [HttpDelete("{id}")]
         public async Task<ActionResult<bool>> Remover(int id)
         {
             try
@@ -221,7 +223,7 @@ namespace API_Central.Controllers
         }
 
         [HttpPut("AtualizarStatus/{id}")]
-        public async Task<ActionResult<SoftwaresModel>> AtualizarStatus([FromBody] AtualizarStatusSoftware softwareRequest, int id)
+        public async Task<ActionResult<SoftwaresModel>> AtualizarStatus([FromBody] AtualizarStatusPlanoLicenca softwareRequest, int id)
         {
             try
             {

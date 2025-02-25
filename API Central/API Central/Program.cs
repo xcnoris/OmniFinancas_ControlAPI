@@ -1,4 +1,4 @@
-using DataBase.Data;
+ï»¿using DataBase.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Modelos.EF.Login;
@@ -7,20 +7,20 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-// Adiciona o serviço ao contêiner de injeção de dependência.
+// Adiciona o serviï¿½o ao contï¿½iner de injeï¿½ï¿½o de dependï¿½ncia.
 // Configura o DbContext 'Context' para utilizar o SQL Server como banco de dados,
-// especificando a string de conexão 'DefaultConnection' arquivo de configuração (appsettings.json).
+// especificando a string de conexï¿½o 'DefaultConnection' arquivo de configuraï¿½ï¿½o (appsettings.json).
 builder.Services.AddDbContext<MyServiceStoreDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
 
-// Outras configurações
+// Outras configuraï¿½ï¿½es
 builder.Services.Configure<IdentityOptions>(options =>
 {
-    // Configurações adicionais para o Identity
+    // Configuraï¿½ï¿½es adicionais para o Identity
     options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+ ";
-    options.User.RequireUniqueEmail = true; // Exemplo: requer que o e-mail seja único
+    options.User.RequireUniqueEmail = true; // Exemplo: requer que o e-mail seja ï¿½nico
 });
 
 
@@ -42,11 +42,11 @@ app.UseHttpsRedirection();
 
 app.UseCors("AllowAllOrigins");
 
-// Outras configurações e ma
+// Outras configuraï¿½ï¿½es e ma
 
 app.UseRouting(); // Adiciona suporte ao roteamento
-app.UseAuthentication(); // Adiciona middleware de autenticação
-app.UseAuthorization(); // Adiciona middleware de autorização
+app.UseAuthentication(); // Adiciona middleware de autenticaï¿½ï¿½o
+app.UseAuthorization(); // Adiciona middleware de autorizaï¿½ï¿½o
 
 app.MapControllers();
 
