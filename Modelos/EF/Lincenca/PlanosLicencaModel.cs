@@ -27,5 +27,9 @@ namespace Modelos.EF.Lincenca
         public Situacao Situacao { get; set; }
         public DateTime DataCriacao { get; set; }
         public DateTime DataAtualizacao { get; set; }
+
+
+        public virtual ICollection<PlanosModulosModel>? ModulosPermitidos { get; set; }
+
     }
 }

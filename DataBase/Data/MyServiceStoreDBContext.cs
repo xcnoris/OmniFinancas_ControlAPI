@@ -19,11 +19,15 @@ namespace DataBase.Data
         public DbSet<SoftwaresModel> Softwares { get; set; }
         public DbSet<PlanosLicencaModel> Planos_Licenca { get; set; }
         public DbSet<LicencaModel> Licencas { get; set; }
+        public DbSet<ModulosModel> Modulos_Software { get; set; }
+        public DbSet<PlanosModulosModel> Planos_Modulos { get; set; }
 
 
         // Construtor que aceita DbContextOptions
         public MyServiceStoreDBContext(DbContextOptions<MyServiceStoreDBContext> options)
              : base(options) { }
+
+
 
         protected override void OnModelCreating(ModelBuilder mb)
         {
@@ -37,7 +41,9 @@ namespace DataBase.Data
             mb.ApplyConfiguration(new ClientesMap());
             mb.ApplyConfiguration(new SoftwareMap());
             mb.ApplyConfiguration(new PlanoLicencaMap());
-            mb.ApplyConfiguration(new LicencaMap()); 
+            mb.ApplyConfiguration(new LicencaMap());
+            mb.ApplyConfiguration(new ModulosMap());
+            mb.ApplyConfiguration(new PlanoModuloMap());
         }
     }
 }
