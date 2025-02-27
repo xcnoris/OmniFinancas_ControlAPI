@@ -188,15 +188,15 @@ namespace API_Central.Controllers
         /// <param name="id">ID da entidade.</param>
         /// <returns>A entidade atualizada.</returns
         [HttpPut("AtualizarSituacao/{id}")]
-        public async Task<ActionResult<EntidadeModel>> AtualizarSituacao([FromBody] AtualizarSituacaoEntidade atualizarSituacaoEntidade, int id)
+        public async Task<ActionResult<EntidadeModel>> AtualizarSituacao([FromBody] AtualizarSituacaoEntidade entidadeRequest, int id)
         {
             try
             {
-                EntidadeModel? entidadeExistente = await _dalEntidade.RecuperarPorAsync(x => x.Id.Equals(atualizarSituacaoEntidade.Id));
+                EntidadeModel? entidadeExistente = await _dalEntidade.RecuperarPorAsync(x => x.Id.Equals(entidadeRequest.Id));
                 if (entidadeExistente is null) return BadRequest($"Entidade não encontrada no banco de Dados!");
 
                 // Atualizar o tipo da entidade existente com o novo tipo
-                entidadeExistente.Situacao = atualizarSituacaoEntidade.Situacao;
+                entidadeExistente.Situacao = entidadeRequest.Situacao;
 
                 // Chama o método DAL para atualizar a entidade no banco de dados
                 await _dalEntidade.AtualizarAsync(entidadeExistente);
@@ -213,6 +213,105 @@ namespace API_Central.Controllers
             {
                 // Retorna um erro genérico com a mensagem da exceção
                 return StatusCode(500, $"Erro ao tentar atualizar o tipo da entidade. {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Atualiza o nome de uma entidade pelo ID.
+        /// </summary>
+        /// <param name="entidadeRequest">Dados para atualizar o nome da entidade.</param>
+        /// <param name="id">ID da entidade.</param>
+        /// <returns>A entidade atualizada.</returns>
+        [HttpPut("AtualizarNome/{id}")]
+        public async Task<ActionResult<EntidadeModel>> AtualizarNome([FromBody] AtualizarNomeEntidade entidadeRequest, int id)
+        {
+            try
+            {
+                EntidadeModel? entidadeExistente = await _dalEntidade.RecuperarPorAsync(x => x.Nome.Equals(entidadeRequest.Id));
+                if (entidadeExistente is null) return BadRequest($"Entidade não encontrada no banco de Dados!");
+
+                // Atualizar o nome da entidade existente com o novo nome
+                entidadeExistente.Nome = entidadeRequest.Nome;
+
+                // Chama o método DAL para atualizar a entidade no banco de dados
+                await _dalEntidade.AtualizarAsync(entidadeExistente);
+
+                // Retorna a entidade atualizada dentro de um Ok()
+                return Ok(entidadeExistente);
+            }
+            catch (ValidationException ex)
+            {
+                return BadRequest($"Erro de validação: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro ao tentar atualizar o nome da entidade. {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Atualiza o endereço de uma entidade pelo ID.
+        /// </summary>
+        /// <param name="entidadeRequest">Dados para atualizar o endereço da entidade.</param>
+        /// <param name="id">ID da entidade.</param>
+        /// <returns>A entidade atualizada.</returns>
+        [HttpPut("AtualizarEndereco/{id}")]
+        public async Task<ActionResult<EntidadeModel>> AtualizarEndereco([FromBody] AtualizarEnderecoEntidade entidadeRequest, int id)
+        {
+            try
+            {
+                EntidadeModel? entidadeExistente = await _dalEntidade.RecuperarPorAsync(x => x.Id.Equals(entidadeRequest.Id));
+                if (entidadeExistente is null) return BadRequest($"Entidade não encontrada no banco de Dados!");
+
+                // Atualizar o endereço da entidade existente com o novo endereço
+                entidadeExistente.Endereco = entidadeRequest.Endereco;
+
+                // Chama o método DAL para atualizar a entidade no banco de dados
+                await _dalEntidade.AtualizarAsync(entidadeExistente);
+
+                // Retorna a entidade atualizada dentro de um Ok()
+                return Ok(entidadeExistente);
+            }
+            catch (ValidationException ex)
+            {
+                return BadRequest($"Erro de validação: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro ao tentar atualizar o endereço da entidade. {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Atualiza o telefone de uma entidade pelo ID.
+        /// </summary>
+        /// <param name="entidadeRequest">Dados para atualizar o telefone da entidade.</param>
+        /// <param name="id">ID da entidade.</param>
+        /// <returns>A entidade atualizada.</returns>
+        [HttpPut("AtualizarTelefone/{id}")]
+        public async Task<ActionResult<EntidadeModel>> AtualizarTelefone([FromBody] AtualizarTelefoneEntidade entidadeRequest, int id)
+        {
+            try
+            {
+                EntidadeModel? entidadeExistente = await _dalEntidade.RecuperarPorAsync(x => x.Id.Equals(entidadeRequest.Id));
+                if (entidadeExistente is null) return BadRequest($"Entidade não encontrada no banco de Dados!");
+
+                // Atualizar o telefone da entidade existente com o novo telefone
+                entidadeExistente.Telefone = entidadeRequest.Telefone;
+
+                // Chama o método DAL para atualizar a entidade no banco de dados
+                await _dalEntidade.AtualizarAsync(entidadeExistente);
+
+                // Retorna a entidade atualizada dentro de um Ok()
+                return Ok(entidadeExistente);
+            }
+            catch (ValidationException ex)
+            {
+                return BadRequest($"Erro de validação: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro ao tentar atualizar o telefone da entidade. {ex.Message}");
             }
         }
 
