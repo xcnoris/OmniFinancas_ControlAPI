@@ -1,7 +1,6 @@
 ﻿using DataBase.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Modelos.EF.Login;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Configura o DbContext 'Context' para utilizar o SQL Server como banco de dados,
 // especificando a string de conex�o 'DefaultConnection' arquivo de configura��o (appsettings.json).
 builder.Services.AddDbContext<MyServiceStoreDBContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
 
