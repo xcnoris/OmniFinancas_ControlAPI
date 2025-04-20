@@ -5,7 +5,7 @@
         /// <summary>
         /// Representa uma entidade no sistema.
         /// </summary>
-        public class EntidadeModel
+        public class PessoaModel
         {
             /// <summary>
             /// Identificado único da entidade.

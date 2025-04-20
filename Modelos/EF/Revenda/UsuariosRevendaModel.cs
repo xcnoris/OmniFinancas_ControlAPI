@@ -21,7 +21,7 @@ namespace Modelos.EF.Revenda
 
         // Nesse caso vai ser uma entidade com o tipo Fisica
         public int EntidadeId { get; set; }
-        public virtual EntidadeModel? Entidade { get; set; }
+        public virtual PessoaModel? Entidade { get; set; }
 
         //public int UsuarioLoginId { get; set; }
         //public virtual UserLoginModel? UsuarioLogin { get; set; }

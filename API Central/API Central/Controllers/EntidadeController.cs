@@ -13,13 +13,13 @@ namespace API_Central.Controllers
     [Route("api/[controller]")]
     public class EntidadeController : ControllerBase
     {
-        private readonly DAL<EntidadeModel> _dalEntidade;
+        private readonly DAL<PessoaModel> _dalEntidade;
 
         /// <summary>
         /// Construtor do controlador EntidadeController.
         /// </summary>
         /// <param name="dalEntidade">Dependência de acesso a dados para EntidadeModel.</param>
-        public EntidadeController(DAL<EntidadeModel> dalEntidade)
+        public EntidadeController(DAL<PessoaModel> dalEntidade)
         {
             _dalEntidade = dalEntidade;
         }
@@ -30,7 +30,7 @@ namespace API_Central.Controllers
         /// <param name="entidade">Dados da entidade a ser criada.</param>
         /// <returns>A entidade criada.</returns>
         [HttpPost]
-        public async Task<ActionResult<EntidadeModel>> CriarEntidade([FromBody] EntidadeModel entidade)
+        public async Task<ActionResult<PessoaModel>> CriarEntidade([FromBody] PessoaModel entidade)
         {
             try
             {
@@ -61,11 +61,11 @@ namespace API_Central.Controllers
         /// </summary>
         /// <returns>Lista de entidades.</returns>
         [HttpGet("BuscarTodos")]
-        public async Task<ActionResult<IEnumerable<EntidadeModel>>> BuscarTodos()
+        public async Task<ActionResult<IEnumerable<PessoaModel>>> BuscarTodos()
         {
             try
             {
-                IEnumerable<EntidadeModel?> entidades = await _dalEntidade.ListarAsync();
+                IEnumerable<PessoaModel?> entidades = await _dalEntidade.ListarAsync();
                 return Ok(entidades);
             }
             catch (ValidationException ex)
@@ -85,11 +85,11 @@ namespace API_Central.Controllers
         /// <param name="id">ID da entidade.</param>
         /// <returns>A entidade encontrada.</returns>
         [HttpGet("BuscarPorId/{id}")]
-        public async Task<ActionResult<EntidadeModel>> BuscarPorId(int id)
+        public async Task<ActionResult<PessoaModel>> BuscarPorId(int id)
         {
             try
             {
-                EntidadeModel? entidade = await _dalEntidade.BuscarPorAsync(c => c.Id.Equals(id));
+                PessoaModel? entidade = await _dalEntidade.BuscarPorAsync(c => c.Id.Equals(id));
 
                 // Retorna 404 Not Found se a entidade não for encontrada
                 if (entidade is null) return NotFound($"Não foi encontrada nenhuma entidade com este ID {id}.");
@@ -114,11 +114,11 @@ namespace API_Central.Controllers
         /// <param name="id">ID da entidade.</param>
         /// <returns>A entidade atualizada.</returns>
         [HttpPut("AtualizarPorId/{id}")]
-        public async Task<ActionResult<EntidadeModel>> AtualizarPorId([FromBody] AtualizarEntidade atualizarEntidade, int id)
+        public async Task<ActionResult<PessoaModel>> AtualizarPorId([FromBody] AtualizarEntidade atualizarEntidade, int id)
         {
             try
             {
-                EntidadeModel? entidadeExistente = await _dalEntidade.RecuperarPorAsync(x => x.Id.Equals(id));
+                PessoaModel? entidadeExistente = await _dalEntidade.RecuperarPorAsync(x => x.Id.Equals(id));
                 if (entidadeExistente is null) return BadRequest($"Entidade não encontrada no banco de Dados!");
 
                 // Atualizar os campos da entidade existente com os novos dados
@@ -153,11 +153,11 @@ namespace API_Central.Controllers
         /// <param name="id">ID da entidade.</param>
         /// <returns>A entidade atualizada.</returns>
         [HttpPut("AtualizarTipo/{id}")]
-        public async Task<ActionResult<EntidadeModel>> AtualizarTipo([FromBody] AtualizarTipoEntidade tipoEntidade, int id)
+        public async Task<ActionResult<PessoaModel>> AtualizarTipo([FromBody] AtualizarTipoEntidade tipoEntidade, int id)
         {
             try
             {
-                EntidadeModel? entidadeExistente = await _dalEntidade.RecuperarPorAsync(x => x.Id.Equals(tipoEntidade.Id));
+                PessoaModel? entidadeExistente = await _dalEntidade.RecuperarPorAsync(x => x.Id.Equals(tipoEntidade.Id));
                 if (entidadeExistente is null) return BadRequest($"Entidade não encontrada no banco de Dados!");
 
                 // Atualizar o tipo da entidade existente com o novo tipo
@@ -188,11 +188,11 @@ namespace API_Central.Controllers
         /// <param name="id">ID da entidade.</param>
         /// <returns>A entidade atualizada.</returns
         [HttpPut("AtualizarSituacao/{id}")]
-        public async Task<ActionResult<EntidadeModel>> AtualizarSituacao([FromBody] AtualizarSituacaoEntidade entidadeRequest, int id)
+        public async Task<ActionResult<PessoaModel>> AtualizarSituacao([FromBody] AtualizarSituacaoEntidade entidadeRequest, int id)
         {
             try
             {
-                EntidadeModel? entidadeExistente = await _dalEntidade.RecuperarPorAsync(x => x.Id.Equals(entidadeRequest.Id));
+                PessoaModel? entidadeExistente = await _dalEntidade.RecuperarPorAsync(x => x.Id.Equals(entidadeRequest.Id));
                 if (entidadeExistente is null) return BadRequest($"Entidade não encontrada no banco de Dados!");
 
                 // Atualizar o tipo da entidade existente com o novo tipo
@@ -223,11 +223,11 @@ namespace API_Central.Controllers
         /// <param name="id">ID da entidade.</param>
         /// <returns>A entidade atualizada.</returns>
         [HttpPut("AtualizarNome/{id}")]
-        public async Task<ActionResult<EntidadeModel>> AtualizarNome([FromBody] AtualizarNomeEntidade entidadeRequest, int id)
+        public async Task<ActionResult<PessoaModel>> AtualizarNome([FromBody] AtualizarNomeEntidade entidadeRequest, int id)
         {
             try
             {
-                EntidadeModel? entidadeExistente = await _dalEntidade.RecuperarPorAsync(x => x.Nome.Equals(entidadeRequest.Id));
+                PessoaModel? entidadeExistente = await _dalEntidade.RecuperarPorAsync(x => x.Nome.Equals(entidadeRequest.Id));
                 if (entidadeExistente is null) return BadRequest($"Entidade não encontrada no banco de Dados!");
 
                 // Atualizar o nome da entidade existente com o novo nome
@@ -256,11 +256,11 @@ namespace API_Central.Controllers
         /// <param name="id">ID da entidade.</param>
         /// <returns>A entidade atualizada.</returns>
         [HttpPut("AtualizarEndereco/{id}")]
-        public async Task<ActionResult<EntidadeModel>> AtualizarEndereco([FromBody] AtualizarEnderecoEntidade entidadeRequest, int id)
+        public async Task<ActionResult<PessoaModel>> AtualizarEndereco([FromBody] AtualizarEnderecoEntidade entidadeRequest, int id)
         {
             try
             {
-                EntidadeModel? entidadeExistente = await _dalEntidade.RecuperarPorAsync(x => x.Id.Equals(entidadeRequest.Id));
+                PessoaModel? entidadeExistente = await _dalEntidade.RecuperarPorAsync(x => x.Id.Equals(entidadeRequest.Id));
                 if (entidadeExistente is null) return BadRequest($"Entidade não encontrada no banco de Dados!");
 
                 // Atualizar o endereço da entidade existente com o novo endereço
@@ -289,11 +289,11 @@ namespace API_Central.Controllers
         /// <param name="id">ID da entidade.</param>
         /// <returns>A entidade atualizada.</returns>
         [HttpPut("AtualizarTelefone/{id}")]
-        public async Task<ActionResult<EntidadeModel>> AtualizarTelefone([FromBody] AtualizarTelefoneEntidade entidadeRequest, int id)
+        public async Task<ActionResult<PessoaModel>> AtualizarTelefone([FromBody] AtualizarTelefoneEntidade entidadeRequest, int id)
         {
             try
             {
-                EntidadeModel? entidadeExistente = await _dalEntidade.RecuperarPorAsync(x => x.Id.Equals(entidadeRequest.Id));
+                PessoaModel? entidadeExistente = await _dalEntidade.RecuperarPorAsync(x => x.Id.Equals(entidadeRequest.Id));
                 if (entidadeExistente is null) return BadRequest($"Entidade não encontrada no banco de Dados!");
 
                 // Atualizar o telefone da entidade existente com o novo telefone
@@ -326,7 +326,7 @@ namespace API_Central.Controllers
             try
             {
                 // Primeiro, recupera a entidade existente pelo ID
-                EntidadeModel? entidadeExistente = await _dalEntidade.RecuperarPorAsync(c => c.Id.Equals(id));
+                PessoaModel? entidadeExistente = await _dalEntidade.RecuperarPorAsync(c => c.Id.Equals(id));
 
                 // Retorna 404 Not Found se a entidade não existir
                 if (entidadeExistente is null) return NotFound();

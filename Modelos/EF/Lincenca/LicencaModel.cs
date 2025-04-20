@@ -1,4 +1,5 @@
-﻿using Modelos.EF.Revenda;
+﻿using Modelos.EF.Contrato;
+using Modelos.EF.Revenda;
 using Modelos.Enuns;
 
 namespace Modelos.EF.Lincenca
@@ -7,39 +8,16 @@ namespace Modelos.EF.Lincenca
     {
         public int Id { get; set; }
 
-        /// <summary>
-        /// Identifica o software vinculado a esta licença.
-        /// </summary>
-        public int SoftwareId { get; set; }
-        public virtual SoftwaresModel? Software { get; set; }
-
-        /// <summary>
-        /// Cliente que possui esta licença.
-        /// </summary>
-        public int ClienteId { get; set; }
-        public virtual ClientesModel? Cliente { get; set; }
-
-        /// <summary>
-        /// Plano de licença associado.
-        /// </summary>
-        public int PlanoLicencaId { get; set; }
-        public virtual PlanosLicencaModel? PlanoLicenca { get; set; }
-
+        
         /// <summary>
         /// Código único da licença.
         /// </summary>
         public string ChaveAtivacao { get; set; }
 
-        /// <summary>
-        /// Data de início da licença.
-        /// </summary>
-        public DateTime DataInicio { get; set; }
+        public int ContratoId { get; set; }
+        public virtual ContratoModel? Contrato { get; set; }
 
-        /// <summary>
-        /// Data de expiração da licença.
-        /// </summary>
-        public DateTime? DataExpiracao { get; set; }
-
+        public int QuantidadeAcoesDisponivel { get; set; }
         /// <summary>
         /// Situação da licença (ativa, expirada, cancelada).
         /// </summary>

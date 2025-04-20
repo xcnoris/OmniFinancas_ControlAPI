@@ -4,9 +4,9 @@ using Modelos.EF.Entidade;
 
 namespace DataBase.Data.Map
 {
-    public class EntidadeMap : IEntityTypeConfiguration<EntidadeModel>
+    public class EntidadeMap : IEntityTypeConfiguration<PessoaModel>
     {
-        public void Configure(EntityTypeBuilder<EntidadeModel> bld)
+        public void Configure(EntityTypeBuilder<PessoaModel> bld)
         {
             bld.HasKey(x => x.Id);
 

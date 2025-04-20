@@ -1,18 +1,16 @@
-﻿using Modelos.Enuns;
+﻿using Modelos.EF;
+using Modelos.Enuns;
 
-namespace Modelos.EF
+namespace Modelos.ModelosRequest.Modulos
 {
-    public class ModulosModel
+    public class RetornoModulo
     {
         public int Id { get; set; }
         public IdentificacaoModulo Identificacao { get; set; }
         public string Nome { get; set; }
         public string Descricao { get; set; }
         public int SoftwareId { get; set; }
-        public virtual SoftwaresModel? Software { get; set; }
-        public Decimal Valor { get; set; }
         public Situacao Situacao { get; set; }
-        public DateTime DataCriacao { get; set; }
-        public DateTime DataAtualizacao { get; set; }
+        public decimal Valor { get; set; }
     }
 }

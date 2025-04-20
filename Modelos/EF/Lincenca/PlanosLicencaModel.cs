@@ -11,25 +11,11 @@ namespace Modelos.EF.Lincenca
         /// </summary>
         public string Nome { get; set; }
 
-        /// <summary>
-        /// Duração do plano em meses (0 para vitalício).
-        /// </summary>
-        public int DuracaoMeses { get; set; }
+        //Cada ação equivale a uma requição nos endpoints de disparos de mensagens, documentos ou relatorios
+        public int QuantidadeDeAcoes { get; set; }
 
-        /// <summary>
-        /// Número máximo de usuários permitidos na licença.
-        /// </summary>
-        public int QuantidadeUsuarios { get; set; }
-
-        /// <summary>
-        /// Situação do plano de licença.
-        /// </summary>
-        public Situacao Situacao { get; set; }
         public DateTime DataCriacao { get; set; }
-        public DateTime DataAtualizacao { get; set; }
-
-
-        public virtual ICollection<PlanosModulosModel>? ModulosPermitidos { get; set; }
+        public DateTime? DataAtualizacao { get; set; }
 
     }
 }

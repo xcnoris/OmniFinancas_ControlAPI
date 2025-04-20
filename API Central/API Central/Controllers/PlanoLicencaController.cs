@@ -1,13 +1,8 @@
 ﻿using DataBase.Data;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Modelos.EF;
 using Modelos.EF.Lincenca;
-using Modelos.EF.Revenda;
 using Modelos.ModelosRequest.Licenca;
-using Modelos.ModelosRequest.Software;
 using System.ComponentModel.DataAnnotations;
-using System.Xml;
 
 namespace API_Central.Controllers
 {
@@ -26,7 +21,7 @@ namespace API_Central.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<PlanosLicencaModel>> CriarSoftware([FromBody] CriarPlanoLicenca PlanoLicencaRequest)
+        public async Task<ActionResult<PlanosLicencaModel>> CriarPlanoLicenca([FromBody] CriarPlanoLicenca PlanoLicencaRequest)
         {
             try
             {
@@ -36,12 +31,9 @@ namespace API_Central.Controllers
                 PlanosLicencaModel NovoPlanoLicenca = new PlanosLicencaModel()
                 {
                     Nome = PlanoLicencaRequest.Nome,
-                    DuracaoMeses = PlanoLicencaRequest.DuracaoMeses,
-                    QuantidadeUsuarios = PlanoLicencaRequest.QuantidadeUsuarios,
-                    Situacao = PlanoLicencaRequest.Situacao,
+                    QuantidadeDeAcoes = PlanoLicencaRequest.QuantidadesDeAcoes,
                     DataCriacao = DateTime.Now,
                 };
-
 
                 // Adicionar o recurso a base de dados
                 await _dalPlanoLicenca.AdicionarAsync(NovoPlanoLicenca);
@@ -121,9 +113,7 @@ namespace API_Central.Controllers
                 // Atualizar os campos da entidade existente com os novos daods
                 RecursoExistente.Id = PlanosLicencaRequest.Id;
                 RecursoExistente.Nome = PlanosLicencaRequest.Nome;
-                RecursoExistente.DuracaoMeses = PlanosLicencaRequest.DuracaoMeses;
-                RecursoExistente.QuantidadeUsuarios = PlanosLicencaRequest.QuantidadeUsuarios;
-                RecursoExistente.Situacao = PlanosLicencaRequest.Situacao;
+                RecursoExistente.QuantidadeDeAcoes = PlanosLicencaRequest.QuantidadeDeAcoes;
                 RecursoExistente.DataAtualizacao = DateTime.Now;
 
                 // Chama o método DAL para atualizar a entidade no banco de dados
@@ -182,33 +172,33 @@ namespace API_Central.Controllers
             }
         }
 
-        [HttpPut("AtualizarStatus/{id}")]
-        public async Task<ActionResult<PlanosLicencaModel>> AtualizarStatus([FromBody] AtualizarStatusPlanoLicenca PlanosLicencaRequest, int id)
-        {
-            try
-            {
-                PlanosLicencaModel? RecursoExistente = await _dalPlanoLicenca.BuscarPorAsync(x => x.Id.Equals(id));
+        //[HttpPut("AtualizarStatus/{id}")]
+        //public async Task<ActionResult<PlanosLicencaModel>> AtualizarStatus([FromBody] AtualizarStatusPlanoLicenca PlanosLicencaRequest, int id)
+        //{
+        //    try
+        //    {
+        //        PlanosLicencaModel? RecursoExistente = await _dalPlanoLicenca.BuscarPorAsync(x => x.Id.Equals(id));
 
-                // Retorna 404 Not Found se o recurso não existir
-                if (RecursoExistente is null) return NotFound();
+        //        // Retorna 404 Not Found se o recurso não existir
+        //        if (RecursoExistente is null) return NotFound();
 
-                RecursoExistente.Situacao = PlanosLicencaRequest.Situacao;
-                await _dalPlanoLicenca.AtualizarAsync(RecursoExistente);
+        //        RecursoExistente.Situacao = PlanosLicencaRequest.Situacao;
+        //        await _dalPlanoLicenca.AtualizarAsync(RecursoExistente);
 
-                // Retorna o recursso atualizado dentro de um Ok()
-                return Ok(RecursoExistente);
+        //        // Retorna o recursso atualizado dentro de um Ok()
+        //        return Ok(RecursoExistente);
 
-            }
-            catch (ValidationException ex)
-            {
-                // Retorna um erro de validação com o detalhe da mensagem
-                return BadRequest($"Erro de validação: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                // Retorna um erro genérico com o detalhe da mensagem
-                return StatusCode(500, $"Erro ao tentar atualizar o recurso. {ex.Message}");
-            }
-        }
-    }
+        //    }
+        //    catch (ValidationException ex)
+        //    {
+        //        // Retorna um erro de validação com o detalhe da mensagem
+        //        return BadRequest($"Erro de validação: {ex.Message}");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Retorna um erro genérico com o detalhe da mensagem
+        //        return StatusCode(500, $"Erro ao tentar atualizar o recurso. {ex.Message}");
+        //    }
+        //}
+    } 
 }

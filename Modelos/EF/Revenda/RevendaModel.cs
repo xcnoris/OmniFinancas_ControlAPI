@@ -20,7 +20,7 @@ namespace Modelos.EF.Revenda
 
         // Nesse caso vai ser uma entidade com o tipo Juridica
         public int EntidadeId { get; set; }
-        public virtual EntidadeModel? Entidade { get; set; }
+        public virtual PessoaModel? Entidade { get; set; }
         public string CNPJ { get; set; }
         public Situacao Situacao { get; set; }
         public DateTime DataCriacao { get; set; }

@@ -11,9 +11,7 @@ namespace DataBase.Data.Map
 
             bld.HasKey(x => x.Id);
             bld.Property(x => x.Nome).IsRequired().HasMaxLength(200);
-            bld.Property(x => x.DuracaoMeses).IsRequired();
-            bld.Property(x => x.QuantidadeUsuarios);
-            bld.Property(x => x.Situacao).IsRequired();
+            bld.Property(x => x.QuantidadeDeAcoes).IsRequired();
             bld.Property(x => x.DataCriacao).IsRequired();
             bld.Property(x => x.DataAtualizacao).IsRequired();
 

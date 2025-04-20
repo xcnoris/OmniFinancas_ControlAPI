@@ -6,8 +6,6 @@ namespace Modelos.ModelosRequest.Licenca
     {
         public int Id { get; set; }
         public string Nome { get; set; }
-        public int DuracaoMeses { get; set; }
-        public int QuantidadeUsuarios { get; set; }
-        public Situacao Situacao { get; set; }
+        public int QuantidadeDeAcoes { get; set; }
     }
 }
