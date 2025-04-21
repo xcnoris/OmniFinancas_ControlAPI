@@ -1,5 +1,7 @@
 using DataBase.Data;
+using MetodosGerais.ModelsServices.Contrato;
 using Microsoft.AspNetCore.Mvc;
+using Modelos.DTOs.NumeroContrato.InPut;
 using Modelos.EF.Contrato;
 using System.ComponentModel.DataAnnotations;
 
@@ -19,7 +21,7 @@ namespace API_Central.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<NumeroContratoModel>> CriarNumeroContrato([FromBody] NumeroContratoModel request)
+        public async Task<ActionResult<string>> CriarNumeroContrato([FromBody] DTONumeroContrato request)
         {
             try
             {
@@ -27,11 +29,18 @@ namespace API_Central.Controllers
                 if (contrato is null)
                     return BadRequest("Contrato associado não encontrado.");
 
-                request.DataCriacao = DateTime.Now;
-                request.DataAtualizacao = DateTime.Now;
+                NumeroContratoModel NumeroContrato = new NumeroContratoModel()
+                {
+                    ContratoId = request.ContratoId,
+                    Numero =  request.Numero,
+                    NomeInstancia = request.NomeInstancia,
+                    TokenInstancia = request.TokenInstancia,
+                    DataCriacao = DateTime.Now,
+                };
 
-                await _dalNumeroContrato.AdicionarAsync(request);
-                return Ok(request);
+                await _dalNumeroContrato.AdicionarAsync(NumeroContrato);
+
+                return Ok("Numero Contrato Criado com Sucesso!");
             }
             catch (ValidationException ex)
             {
@@ -49,7 +58,7 @@ namespace API_Central.Controllers
             try
             {
                 var lista = await _dalNumeroContrato.ListarAsync();
-                return Ok(lista);
+                return Ok(NumeroContratoService.InstanciarListaDTONumeroContrato(lista));
             }
             catch (Exception ex)
             {
@@ -58,15 +67,15 @@ namespace API_Central.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<NumeroContratoModel>> BuscarPorId(int id)
+        public async Task<ActionResult<DTONumeroContrato>> BuscarPorId(int id)
         {
             try
             {
-                var numeroContrato = await _dalNumeroContrato.BuscarPorAsync(n => n.Id == id);
-                if (numeroContrato is null)
+                NumeroContratoModel? NumeroContrato = await _dalNumeroContrato.BuscarPorAsync(n => n.Id == id);
+                if (NumeroContrato is null)
                     return NotFound($"Número de contrato com ID {id} não encontrado.");
 
-                return Ok(numeroContrato);
+                return Ok(NumeroContratoService.InstanciarDTONumeroContrato(NumeroContrato));
             }
             catch (Exception ex)
             {
@@ -75,21 +84,17 @@ namespace API_Central.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> Atualizar(int id, [FromBody] NumeroContratoModel atualizado)
+        public async Task<ActionResult> Atualizar(int id, [FromBody] DTONumeroContrato atualizado)
         {
             try
             {
-                var existente = await _dalNumeroContrato.RecuperarPorAsync(n => n.Id == id);
+                NumeroContratoModel? existente = await _dalNumeroContrato.RecuperarPorAsync(n => n.Id == id);
                 if (existente is null)
                     return NotFound($"Número de contrato com ID {id} não encontrado.");
 
-                existente.Numero = atualizado.Numero;
-                existente.NomeInstancia = atualizado.NomeInstancia;
-                existente.TokenInstancia = atualizado.TokenInstancia;
-                existente.ContratoId = atualizado.ContratoId;
-                existente.DataAtualizacao = DateTime.Now;
-
-                await _dalNumeroContrato.AtualizarAsync(existente);
+                NumeroContratoModel ExistenteAtualizado = NumeroContratoService.InstanciarNumeroContrato(existente, atualizado);
+              
+                await _dalNumeroContrato.AtualizarAsync(ExistenteAtualizado);
                 return Ok("Número de contrato atualizado com sucesso.");
             }
             catch (Exception ex)

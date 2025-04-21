@@ -33,6 +33,7 @@ namespace API_Central.Controllers
                     Nome = PlanoLicencaRequest.Nome,
                     QuantidadeDeAcoes = PlanoLicencaRequest.QuantidadesDeAcoes,
                     DataCriacao = DateTime.Now,
+                    DataAtualizacao = DateTime.Now
                 };
 
                 // Adicionar o recurso a base de dados

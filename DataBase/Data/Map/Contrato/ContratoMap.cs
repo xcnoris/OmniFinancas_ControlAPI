@@ -14,6 +14,7 @@ namespace DataBase.Data.Map
             bld.Property(x => x.ClienteFinalId).IsRequired();
             bld.Property(x => x.DataCriacao).IsRequired();
             bld.Property(x => x.DataAtualizacao).IsRequired();
+            bld.Property(x => x.Valor).IsRequired();
 
             bld.HasOne(x => x.Tipo_Plano)
                 .WithMany()
@@ -22,10 +23,6 @@ namespace DataBase.Data.Map
             bld.HasOne(x => x.ClienteFinal)
                 .WithMany()
                 .HasForeignKey(x => x.ClienteFinalId);
-
-            bld.HasOne(x => x.Licenca)
-                .WithMany()
-                .HasForeignKey(x => x.LicencaId);
 
             bld.HasMany(x => x.NumerosDoContrato)
                 .WithOne(x => x.Contrato)

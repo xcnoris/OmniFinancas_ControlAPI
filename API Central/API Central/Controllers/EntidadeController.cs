@@ -34,6 +34,7 @@ namespace API_Central.Controllers
         {
             try
             {
+                entidade.DataCriacao = DateTime.Now;
                 // Adicionar a entidade a base de dados
                 await _dalEntidade.AdicionarAsync(entidade);
 

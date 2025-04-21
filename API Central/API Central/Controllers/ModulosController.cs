@@ -90,7 +90,7 @@ namespace API_Central.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet("{id}")]
         public async Task<ActionResult<ModulosModel>> BuscarPorId(int id)
         {
             try

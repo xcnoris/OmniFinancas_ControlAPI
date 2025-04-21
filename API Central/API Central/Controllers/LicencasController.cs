@@ -1,7 +1,11 @@
 ﻿using DataBase.Data;
+using MetodosGerais.ModelsServices;
 using Microsoft.AspNetCore.Mvc;
+using Modelos.DTOs.PlanoLicenca;
+using Modelos.EF;
 using Modelos.EF.Contrato;
 using Modelos.EF.Lincenca;
+using Modelos.Enuns;
 
 namespace API_Central.Controllers
 {
@@ -11,24 +15,37 @@ namespace API_Central.Controllers
     {
         private readonly DAL<LicencaModel> _dalLicenca;
         private readonly DAL<ContratoModel> _dalContrato;
+        private readonly DAL<NumeroContratoModel> _dalNumeroContrato;
+        private readonly DAL<ModulosPorNumeroModel> _dalModuloNumero;
+        private readonly DAL<ModulosModel> _dalModulo;
 
-        public LicencasController(DAL<LicencaModel> dalLicenca, DAL<ContratoModel> dalContrato)
+        public LicencasController(
+            DAL<LicencaModel> dalLicenca,
+            DAL<ContratoModel> dalContrato,
+            DAL<NumeroContratoModel> dalNumeroContrato,
+            DAL<ModulosPorNumeroModel> ModuloNumero,
+            DAL<ModulosModel> dalModulo
+            )
         {
             _dalLicenca = dalLicenca;
             _dalContrato = dalContrato;
+            _dalNumeroContrato = dalNumeroContrato;
+            _dalModuloNumero = ModuloNumero;
+            _dalModulo = dalModulo;
         }
 
         [HttpPost]
-        public async Task<ActionResult<LicencaModel>> Criar([FromBody] LicencaModel licenca)
+        public async Task<ActionResult<DTOLicenca>> Criar([FromBody] DTOLicenca licenca)
         {
             var contrato = await _dalContrato.RecuperarPorAsync(c => c.Id == licenca.ContratoId);
             if (contrato is null)
                 return BadRequest("Contrato não encontrado.");
 
-            licenca.DataCriacao = DateTime.Now;
-            licenca.DataAtualizacao = DateTime.Now;
+            LicencaModel novaLicenca = LicencaService.InstanciarNumeroContrato(new LicencaModel(), licenca);
+            novaLicenca.DataCriacao = DateTime.Now;
+            novaLicenca.ChaveAtivacao = LicencaService.GerarChaveAtivacao(licenca.ContratoId);
 
-            await _dalLicenca.AdicionarAsync(licenca);
+            await _dalLicenca.AdicionarAsync(novaLicenca);
             return Ok(licenca);
         }
 
@@ -80,5 +97,40 @@ namespace API_Central.Controllers
             await _dalLicenca.DeletarAsync(existente);
             return NoContent();
         }
+
+        [HttpGet("{licenca}")]
+        public async Task<ActionResult<IEnumerable<DTOModulosLiberadosNoContrato>>> BuscarModulosPorLinca(string licenca)
+        {
+            var licencaExistente = await _dalLicenca.BuscarPorAsync(l => l.ChaveAtivacao == licenca);
+            if (licencaExistente is null)
+                return NotFound("Licença não encontrada.");
+
+            if (licencaExistente.Situacao != SituacaoLicenca.Ativa)
+                return BadRequest("Licença não está ativa.");
+
+            var listaNumeros = (await _dalNumeroContrato.RecuperarTodosPorAsync(n => n.ContratoId == licencaExistente.ContratoId)).ToList();
+            var numeroIds = listaNumeros.Select(n => n.Id).ToList();
+
+            var modulosPorNumero = (await _dalModuloNumero.RecuperarTodosPorAsync(m => numeroIds.Contains(m.NumeroId))).ToList();
+            var moduloIds = modulosPorNumero.Select(m => m.ModuloId).Distinct().ToList();
+
+            var modulos = (await _dalModulo.RecuperarTodosPorAsync(m => moduloIds.Contains(m.Id))).ToList();
+
+            var resultado = modulosPorNumero
+                .Join(listaNumeros, mpn => mpn.NumeroId, num => num.Id, (mpn, num) => new { mpn, num })
+                .Join(modulos, x => x.mpn.ModuloId, mod => mod.Id, (x, mod) => new DTOModulosLiberadosNoContrato
+                {
+                    Numero = x.num.Numero,
+                    IdentificadorModulo = mod.Identificacao,
+                    NomeInstancia = x.num.NomeInstancia,
+                    TokenInstancia = x.num.TokenInstancia
+                })
+                .ToList();
+
+            return Ok(resultado);
+        }
+
+
+
     }
 }

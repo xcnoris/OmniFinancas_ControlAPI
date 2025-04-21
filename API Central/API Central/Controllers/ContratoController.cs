@@ -1,5 +1,7 @@
 using DataBase.Data;
+using MetodosGerais.ModelsServices.Contrato;
 using Microsoft.AspNetCore.Mvc;
+using Modelos.DTOs.Contrato;
 using Modelos.EF;
 using Modelos.EF.Contrato;
 using Modelos.EF.Lincenca;
@@ -26,7 +28,7 @@ namespace API_Central.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ContratoModel>> CriarContrato([FromBody] ContratoModel request)
+        public async Task<ActionResult<ContratoModel>> CriarContrato([FromBody] DTOContrato request)
         {
             try
             {
@@ -36,9 +38,11 @@ namespace API_Central.Controllers
                 var plano = await _dalPlano.RecuperarPorAsync(p => p.Id.Equals(request.Tipo_PlanoId));
                 if (plano is null) return BadRequest("Plano de licença não encontrado.");
 
-                request.DataCriacao = DateTime.Now;
 
-                await _dalContrato.AdicionarAsync(request);
+                ContratoModel NovoContrato = ContratoService.InstanciarContrato(new ContratoModel(), request);
+                NovoContrato.DataCriacao = DateTime.Now;
+
+                await _dalContrato.AdicionarAsync(NovoContrato);
                 return Ok(request);
             }
             catch (ValidationException ex)
@@ -91,8 +95,8 @@ namespace API_Central.Controllers
 
                 contratoExistente.ClienteFinalId = contratoAtualizado.ClienteFinalId;
                 contratoExistente.Tipo_PlanoId = contratoAtualizado.Tipo_PlanoId;
-                contratoExistente.LicencaId = contratoAtualizado.LicencaId;
                 contratoExistente.DataAtualizacao = DateTime.Now;
+                contratoExistente.Valor = contratoAtualizado.Valor;
 
                 // Aqui pode-se adicionar lógica para atualizar os `NumerosDoContrato` também, se necessário.
 

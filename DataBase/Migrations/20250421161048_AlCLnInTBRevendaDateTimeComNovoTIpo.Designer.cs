@@ -3,6 +3,7 @@ using System;
 using DataBase.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataBase.Migrations
 {
     [DbContext(typeof(MyServiceStoreDBContext))]
-    partial class MyServiceStoreDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250421161048_AlCLnInTBRevendaDateTimeComNovoTIpo")]
+    partial class AlCLnInTBRevendaDateTimeComNovoTIpo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,9 +32,6 @@ namespace DataBase.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("DataAtualizacao")
-                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("DataCriacao")
                         .HasColumnType("timestamp with time zone");
@@ -74,6 +74,9 @@ namespace DataBase.Migrations
                     b.Property<DateTime>("DataCriacao")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int?>("LicencaId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("Tipo_PlanoId")
                         .HasColumnType("integer");
 
@@ -85,6 +88,8 @@ namespace DataBase.Migrations
                     b.HasIndex("ClienteFinalId");
 
                     b.HasIndex("ClientesModelId");
+
+                    b.HasIndex("LicencaId");
 
                     b.HasIndex("Tipo_PlanoId");
 
@@ -267,7 +272,8 @@ namespace DataBase.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("DataAtualizacao")
+                    b.Property<DateTime?>("DataAtualizacao")
+                        .IsRequired()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("DataCriacao")
@@ -462,6 +468,10 @@ namespace DataBase.Migrations
                         .WithMany("Contratos")
                         .HasForeignKey("ClientesModelId");
 
+                    b.HasOne("Modelos.EF.Lincenca.LicencaModel", "Licenca")
+                        .WithMany()
+                        .HasForeignKey("LicencaId");
+
                     b.HasOne("Modelos.EF.Lincenca.PlanosLicencaModel", "Tipo_Plano")
                         .WithMany()
                         .HasForeignKey("Tipo_PlanoId")
@@ -469,6 +479,8 @@ namespace DataBase.Migrations
                         .IsRequired();
 
                     b.Navigation("ClienteFinal");
+
+                    b.Navigation("Licenca");
 
                     b.Navigation("Tipo_Plano");
                 });

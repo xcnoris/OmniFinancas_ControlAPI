@@ -18,6 +18,7 @@ namespace Modelos.EF
 
         public Situacao Situacao { get; set; }
         public DateTime DataCriacao { get; set; }
+        public DateTime DataAtualizacao { get; set; }
 
 
         public List<LicencaModel> Licencas { get; set; } = new();

@@ -36,6 +36,19 @@ namespace DataBase.Data
         {
             base.OnModelCreating(mb); // Chama o mét1odo base para garantir a configuração padrão do Identity
 
+            // Conversão global de DateTime -> UTC
+            foreach (var entityType in mb.Model.GetEntityTypes())
+            {
+                foreach (var property in entityType.GetProperties()
+                    .Where(p => p.ClrType == typeof(DateTime) || p.ClrType == typeof(DateTime?)))
+                {
+                    property.SetValueConverter(new Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<DateTime, DateTime>(
+                        v => v.ToUniversalTime(),
+                        v => DateTime.SpecifyKind(v, DateTimeKind.Utc)));
+                }
+            }
+
+
             // Aplicando os mapeamentos das entidades
             mb.ApplyConfiguration(new RevendaMap());
             mb.ApplyConfiguration(new UsuariosRevendaMap());

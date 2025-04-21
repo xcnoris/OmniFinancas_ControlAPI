@@ -24,6 +24,7 @@ namespace DataBase.Data.Map
 
             bld.Property(x => x.Situacao).IsRequired();
             bld.Property(x => x.DataCriacao).IsRequired();
+            bld.Property(x => x.DataAtualizacao).IsRequired();
         }
     }
 }

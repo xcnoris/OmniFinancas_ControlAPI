@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Modelos.EF.Revenda;
 
 namespace DataBase.Data.Map
@@ -17,7 +18,13 @@ namespace DataBase.Data.Map
                 .OnDelete(DeleteBehavior.Restrict);
 
             bld.Property(x => x.Situacao).IsRequired();
-            bld.Property(x => x.DataCriacao).IsRequired();
+            bld.Property(x => x.DataCriacao)
+                .IsRequired()
+                .HasConversion(
+                    new ValueConverter<DateTime, DateTime>(
+                        v => v.ToUniversalTime(),
+                        v => DateTime.SpecifyKind(v, DateTimeKind.Utc)
+                    ));
         }
     }
 }

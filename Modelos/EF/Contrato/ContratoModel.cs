@@ -12,9 +12,7 @@ namespace Modelos.EF.Contrato
         public int ClienteFinalId { get; set; }
         public virtual ClientesModel? ClienteFinal { get; set; }
 
-        public int? LicencaId { get; set; }
-        public virtual LicencaModel? Licenca { get; set; }
-
+        public Decimal Valor { get; set; }
 
         public DateTime DataCriacao { get; set; }
         public DateTime DataAtualizacao { get; set; }
