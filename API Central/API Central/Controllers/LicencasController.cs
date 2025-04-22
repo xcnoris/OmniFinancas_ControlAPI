@@ -43,11 +43,13 @@ namespace API_Central.Controllers
 
             LicencaModel novaLicenca = LicencaService.InstanciarNumeroContrato(new LicencaModel(), licenca);
             novaLicenca.DataCriacao = DateTime.Now;
+            novaLicenca.EnderecoMac = licenca.EnderecoMac;
             novaLicenca.ChaveAtivacao = LicencaService.GerarChaveAtivacao(licenca.ContratoId);
 
             await _dalLicenca.AdicionarAsync(novaLicenca);
             return Ok(licenca);
         }
+
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<LicencaModel>>> Listar()
@@ -55,6 +57,7 @@ namespace API_Central.Controllers
             var licencas = await _dalLicenca.ListarAsync();
             return Ok(licencas);
         }
+
 
         [HttpGet("{id}")]
         public async Task<ActionResult<LicencaModel>> BuscarPorId(int id)
@@ -80,6 +83,7 @@ namespace API_Central.Controllers
             existente.ChaveAtivacao = atualizada.ChaveAtivacao;
             existente.ContratoId = atualizada.ContratoId;
             existente.QuantidadeAcoesDisponivel = atualizada.QuantidadeAcoesDisponivel;
+            existente.EnderecoMac = atualizada.EnderecoMac;
             existente.Situacao = atualizada.Situacao;
             existente.DataAtualizacao = DateTime.Now;
 
@@ -87,6 +91,7 @@ namespace API_Central.Controllers
             return Ok("Licença atualizada com sucesso.");
         }
 
+        
         [HttpDelete("{id}")]
         public async Task<IActionResult> Remover(int id)
         {
@@ -98,15 +103,18 @@ namespace API_Central.Controllers
             return NoContent();
         }
 
-        [HttpGet("{licenca}")]
-        public async Task<ActionResult<IEnumerable<DTOModulosLiberadosNoContrato>>> BuscarModulosPorLinca(string licenca)
+        [HttpGet("BuscarModulosLiberados")]
+        public async Task<ActionResult<IEnumerable<DTOModulosLiberadosNoContrato>>> BuscarModulosPorLinca(DTOBuscarModulosPorNumero request)
         {
-            var licencaExistente = await _dalLicenca.BuscarPorAsync(l => l.ChaveAtivacao == licenca);
+            var licencaExistente = await _dalLicenca.BuscarPorAsync(l => l.ChaveAtivacao == request.ChaveAtivacao);
             if (licencaExistente is null)
                 return NotFound("Licença não encontrada.");
 
             if (licencaExistente.Situacao != SituacaoLicenca.Ativa)
                 return BadRequest("Licença não está ativa.");
+            if (licencaExistente.EnderecoMac != request.EnderecoMac)
+                return BadRequest("Endereço Mac Errado!");
+
 
             var listaNumeros = (await _dalNumeroContrato.RecuperarTodosPorAsync(n => n.ContratoId == licencaExistente.ContratoId)).ToList();
             var numeroIds = listaNumeros.Select(n => n.Id).ToList();

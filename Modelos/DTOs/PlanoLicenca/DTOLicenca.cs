@@ -14,6 +14,7 @@ namespace Modelos.DTOs.PlanoLicenca
 
         public int ContratoId { get; set; }
 
+        public string EnderecoMac { get; set; }
         /// <summary>
         /// Situação da licença (ativa, expirada, cancelada).
         /// </summary>

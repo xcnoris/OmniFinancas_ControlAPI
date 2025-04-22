@@ -14,6 +14,7 @@ namespace Modelos.EF.Lincenca
         /// </summary>
         public string ChaveAtivacao { get; set; }
 
+        public string EnderecoMac { get; set; }
         public int ContratoId { get; set; }
         public virtual ContratoModel? Contrato { get; set; }
 
