@@ -1,5 +1,6 @@
 ﻿using DataBase.Data;
 using MetodosGerais.ModelsServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Modelos.DTOs.Cliente;
 using Modelos.EF;
@@ -28,6 +29,7 @@ namespace API_Central.Controllers
             _dalRevenda = dalRevenda;
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<ClientesModel>> CriarCliente([FromBody] DTOCliente ClienteRequest)
         {
@@ -57,6 +59,7 @@ namespace API_Central.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ClientesModel>>> Listar()
         {

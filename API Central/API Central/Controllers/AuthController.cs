@@ -1,7 +1,9 @@
 ﻿using System.Threading.Tasks;
+using API_Central.JWTServices;
 using API_Central.Services;
 using DataBase.Data;
 using MetodosGerais;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Modelos.DTOs.PlanoLicenca;
 using Modelos.EF.Contrato;
@@ -32,14 +34,14 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> Login([FromBody] LoginModel model)
     {
         // Exemplo simples: verificação fixa de usuário/senha
-        UserLoginModel? UserExistente = await _dalUserLogin.RecuperarPorAsync(user => user.Email == model.NomeUser);
+        UserLoginModel? UserExistente = await _dalUserLogin.RecuperarPorAsync(user => user.Email == model.Email);
 
         if (UserExistente == null) return NotFound("Nenhum Usuario Encontrado com esse Nome!");
         if (UserExistente.HashSenha != HashStringService.GerarHash256(model.Senha))
             return BadRequest("Senha incorreta!");
 
         List<string> ListaClain = new List<string>();
-        ListaClain.Add("Admin");
+        ListaClain.Add(UserExistente.Tipo_User.ToString());
 
         var token = _jwtService.GenerateToken(UserExistente, ListaClain);
         return Ok(new { token });
@@ -47,11 +49,15 @@ public class AuthController : ControllerBase
 
     }
 
+    [Authorize(Roles =Roles.Admin)]
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterModel model)
     {
         UsuariosRevendaModel? userRevenda = await _dalUserRevenda.RecuperarPorAsync(x => x.Id == model.UsuarioRevendaId);
         if (userRevenda == null) return NotFound($"Não foi encontrado nenhum usuario de revenda com esse ID: {model.UsuarioRevendaId}");
+
+        UserLoginModel? UserExistente = await _dalUserLogin.RecuperarPorAsync(user => user.Email == model.email);
+        if (UserExistente != null) return BadRequest("Já existe um usuario com esse email cadastrado!");
 
         var newuser = new UserLoginModel
         {
@@ -59,6 +65,7 @@ public class AuthController : ControllerBase
             Email = model.email,
             HashSenha = HashStringService.GerarHash256(model.Senha),
             UsuarioRevendaId = model.UsuarioRevendaId,
+            Tipo_User = model.Tipo_User,
             Situacao = Situacao.Ativo,
             DataCriacao = DateTime.Now,
             DataAtualizacao = DateTime.Now

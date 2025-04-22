@@ -15,6 +15,7 @@ namespace Modelos.EF.Login
         public string HashSenha { get; set; }
         public int UsuarioRevendaId { get; set; }
         public virtual UsuariosRevendaModel? UsuarioRevenda { get; set; }
+        public TipoUserLogin Tipo_User { get; set; }
         public Situacao Situacao { get; set; }
         public DateTime DataCriacao { get; set; }
         public DateTime? DataAtualizacao { get; set; }
