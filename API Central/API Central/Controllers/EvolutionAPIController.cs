@@ -33,8 +33,8 @@ namespace API_Central.Controllers
             _dalLicenca = dalLicenca;
         }
 
-        [HttpPost]
-        public async Task<ActionResult<ClientesModel>> EnviarMensagemPorWhatsapp([FromBody] DTOEnviarMensagem request)
+        [HttpPost("EnviarMensagem")]
+        public async Task<ActionResult<string>> EnviarMensagemPorWhatsapp([FromBody] DTOEnviarMensagem request)
         {
             try
             {
@@ -50,11 +50,11 @@ namespace API_Central.Controllers
                 bool DeuCerto = await HTTPServices.EnviarMensagemViaAPI(request);
                 if (DeuCerto)
                 {
-                    return Ok();
+                    return Ok("Sucesso!");
                 }
                 else
                 {
-                    return BadRequest();
+                    return BadRequest("Mensagem nao foi enviada!");
                 }
             }
             catch (ValidationException ex)

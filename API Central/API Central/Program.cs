@@ -42,7 +42,7 @@ builder.Services.AddAuthentication(options =>
 
 
 builder.Services.AddSwaggerGen(x => {
-    x.SwaggerDoc("v1", new OpenApiInfo { Title = "Minha API", Version = "v1" });
+    x.SwaggerDoc("v1", new OpenApiInfo { Title = "Central API - CDI OmniService ", Version = "v1" });
 
     x.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
