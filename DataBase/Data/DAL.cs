@@ -6,9 +6,9 @@ namespace DataBase.Data
 {
     public class DAL<T> : IDisposable where T : class
     {
-        private readonly MyServiceStoreDBContext context;
+        private readonly CDIOmniServiceDBContext context;
 
-        public DAL(MyServiceStoreDBContext context)
+        public DAL(CDIOmniServiceDBContext context)
         {
             this.context = context;
         }

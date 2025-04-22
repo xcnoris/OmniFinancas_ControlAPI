@@ -1,36 +1,70 @@
-﻿using DataBase.Data;
+﻿using API_Central.Services;
+using DataBase.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
-// Adiciona o servi�o ao cont�iner de inje��o de depend�ncia.
-// Configura o DbContext 'Context' para utilizar o SQL Server como banco de dados,
-// especificando a string de conex�o 'DefaultConnection' arquivo de configura��o (appsettings.json).
-builder.Services.AddDbContext<MyServiceStoreDBContext>(options =>
+// Configura o DbContext com PostgreSQL
+builder.Services.AddDbContext<CDIOmniServiceDBContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
 
-// Outras configura��es
+// Configurações do Identity
 builder.Services.Configure<IdentityOptions>(options =>
 {
-    // Configura��es adicionais para o Identity
     options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+ ";
-    options.User.RequireUniqueEmail = true; // Exemplo: requer que o e-mail seja �nico
+    options.User.RequireUniqueEmail = true;
 });
 
+// JWT - Configuração
+var jwtSettings = builder.Configuration.GetSection("JwtSettings");
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = true;
+    options.SaveToken = true;
 
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtSettings["Issuer"],
+        ValidAudience = jwtSettings["Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]))
+    };
+});
+
+// CORS - Exemplo simples
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
+builder.Services.AddScoped(typeof(DAL<>));
+builder.Services.AddScoped<JwtService>(); // Serviço JWT que você vai criar
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped(typeof(DAL<>));
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Middleware
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -41,11 +75,8 @@ app.UseHttpsRedirection();
 
 app.UseCors("AllowAllOrigins");
 
-// Outras configura��es e ma
-
-app.UseRouting(); // Adiciona suporte ao roteamento
-app.UseAuthentication(); // Adiciona middleware de autentica��o
-app.UseAuthorization(); // Adiciona middleware de autoriza��o
+app.UseAuthentication(); // JWT Auth
+app.UseAuthorization();
 
 app.MapControllers();
 

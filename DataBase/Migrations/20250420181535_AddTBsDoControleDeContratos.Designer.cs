@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DataBase.Migrations
 {
-    [DbContext(typeof(MyServiceStoreDBContext))]
+    [DbContext(typeof(CDIOmniServiceDBContext))]
     [Migration("20250420181535_AddTBsDoControleDeContratos")]
     partial class AddTBsDoControleDeContratos
     {

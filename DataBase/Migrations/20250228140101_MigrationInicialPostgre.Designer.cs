@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DataBase.Migrations
 {
-    [DbContext(typeof(MyServiceStoreDBContext))]
+    [DbContext(typeof(CDIOmniServiceDBContext))]
     [Migration("20250228140101_MigrationInicialPostgre")]
     partial class MigrationInicialPostgre
     {

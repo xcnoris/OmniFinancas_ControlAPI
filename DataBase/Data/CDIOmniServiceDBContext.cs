@@ -1,14 +1,16 @@
 ﻿using DataBase.Data.Map;
+using DataBase.Data.Map.Contrato;
 using Microsoft.EntityFrameworkCore;
 using Modelos.EF;
 using Modelos.EF.Contrato;
 using Modelos.EF.Entidade;
 using Modelos.EF.Lincenca;
+using Modelos.EF.Login;
 using Modelos.EF.Revenda;
 
 namespace DataBase.Data
 {
-    public class MyServiceStoreDBContext : DbContext
+    public class CDIOmniServiceDBContext : DbContext
     {
 
         // DbSets - Tabelas do banco
@@ -24,10 +26,11 @@ namespace DataBase.Data
         public DbSet<ContratoModel> Contratos {  get; set; }
         public DbSet<NumeroContratoModel> Numeros_Contrato { get; set; }
         public DbSet<ModulosPorNumeroModel> Modulos_Por_Numero { get; set; }
+        public DbSet<UserLoginModel> Users_Login { get; set; }
 
 
         // Construtor que aceita DbContextOptions
-        public MyServiceStoreDBContext(DbContextOptions<MyServiceStoreDBContext> options)
+        public CDIOmniServiceDBContext(DbContextOptions<CDIOmniServiceDBContext> options)
              : base(options) { }
 
 
@@ -62,6 +65,7 @@ namespace DataBase.Data
             mb.ApplyConfiguration(new ContratoMap());
             mb.ApplyConfiguration(new NumeroContratoMap());
             mb.ApplyConfiguration(new ModulosPorNumeroMap());
+            mb.ApplyConfiguration(new UserLoginMap());
         }
     }
 }
