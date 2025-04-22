@@ -104,7 +104,7 @@ namespace API_Central.Controllers
         }
 
         [HttpGet("BuscarModulosLiberados")]
-        public async Task<ActionResult<IEnumerable<DTOModulosLiberadosNoContrato>>> BuscarModulosPorLinca(DTOBuscarModulosPorNumero request)
+        public async Task<ActionResult<IEnumerable<DTOModulosLiberadosNoContrato>>> BuscarModulosPorLinca([FromBody]  DTOBuscarModulosPorNumero request)
         {
             var licencaExistente = await _dalLicenca.BuscarPorAsync(l => l.ChaveAtivacao == request.ChaveAtivacao);
             if (licencaExistente is null)
