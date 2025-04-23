@@ -90,7 +90,17 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
+
 var app = builder.Build();
+
+// Servir arquivos da pasta "Boletos"
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "Boletos")),
+    RequestPath = "/files"
+});
 
 // Middleware
 if (app.Environment.IsDevelopment())
