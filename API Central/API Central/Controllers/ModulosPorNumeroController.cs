@@ -1,4 +1,6 @@
-﻿using DataBase.Data;
+﻿using API_Central.JWTServices;
+using DataBase.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Modelos.EF;
 using Modelos.EF.Contrato;
@@ -6,8 +8,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace API_Central.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
+    [ApiController, Route("api/[controller]")]
     public class ModulosPorNumeroController : ControllerBase
     {
         private readonly DAL<ModulosPorNumeroModel> _dalModulosPorNumero;
@@ -24,18 +25,16 @@ namespace API_Central.Controllers
             _dalModulo = dalModulo;
         }
 
-        [HttpPost]
+        [HttpPost, Authorize(Roles = Roles.Revenda)]
         public async Task<ActionResult<ModulosPorNumeroModel>> Criar([FromBody] ModulosPorNumeroModel request)
         {
             try
             {
                 var numero = await _dalNumeroContrato.RecuperarPorAsync(n => n.Id == request.NumeroId);
-                if (numero is null)
-                    return BadRequest("Número de contrato não encontrado.");
+                if (numero is null) return BadRequest("Número de contrato não encontrado.");
 
                 var modulo = await _dalModulo.RecuperarPorAsync(m => m.Id == request.ModuloId);
-                if (modulo is null)
-                    return BadRequest("Módulo não encontrado.");
+                if (modulo is null) return BadRequest("Módulo não encontrado.");
 
                 request.DataCriacao = DateTime.Now;
                 request.DataAtualizacao = DateTime.Now;
@@ -53,7 +52,7 @@ namespace API_Central.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet, Authorize(Roles.Revenda)]
         public async Task<ActionResult<IEnumerable<ModulosPorNumeroModel>>> ListarTodos()
         {
             try
@@ -67,14 +66,13 @@ namespace API_Central.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), Authorize(Roles = Roles.Revenda)]
         public async Task<ActionResult<ModulosPorNumeroModel>> BuscarPorId(int id)
         {
             try
             {
                 var registro = await _dalModulosPorNumero.BuscarPorAsync(m => m.Id == id);
-                if (registro is null)
-                    return NotFound("Vínculo não encontrado.");
+                if (registro is null) return NotFound("Vínculo não encontrado.");
 
                 return Ok(registro);
             }
@@ -84,22 +82,19 @@ namespace API_Central.Controllers
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize(Roles = Roles.Revenda)]
         public async Task<ActionResult> Atualizar(int id, [FromBody] ModulosPorNumeroModel atualizado)
         {
             try
             {
                 var existente = await _dalModulosPorNumero.RecuperarPorAsync(m => m.Id == id);
-                if (existente is null)
-                    return NotFound("Vínculo não encontrado.");
+                if (existente is null return NotFound("Vínculo não encontrado.");
 
                 var numero = await _dalNumeroContrato.RecuperarPorAsync(n => n.Id == atualizado.NumeroId);
-                if (numero is null)
-                    return BadRequest("Número de contrato não encontrado.");
+                if (numero is null) return BadRequest("Número de contrato não encontrado.");
 
                 var modulo = await _dalModulo.RecuperarPorAsync(m => m.Id == atualizado.ModuloId);
-                if (modulo is null)
-                    return BadRequest("Módulo não encontrado.");
+                if (modulo is null) return BadRequest("Módulo não encontrado.");
 
                 existente.NumeroId = atualizado.NumeroId;
                 existente.ModuloId = atualizado.ModuloId;
@@ -114,14 +109,13 @@ namespace API_Central.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> Remover(int id)
         {
             try
             {
                 var existente = await _dalModulosPorNumero.RecuperarPorAsync(m => m.Id == id);
-                if (existente is null)
-                    return NotFound("Vínculo não encontrado.");
+                if (existente is null) return NotFound("Vínculo não encontrado.");
 
                 await _dalModulosPorNumero.DeletarAsync(existente);
                 return NoContent();

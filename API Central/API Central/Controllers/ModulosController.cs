@@ -1,3 +1,4 @@
+using API_Central.JWTServices;
 using DataBase.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,8 +13,7 @@ using System.Xml;
 
 namespace API_Central.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
+    [ApiController, Route("api/[controller]")]
     public class ModulosController : ControllerBase
     {
         private readonly DAL<ModulosModel> _dalModulo;
@@ -27,7 +27,7 @@ namespace API_Central.Controllers
             _dalSoftwares = dalSoftware;
         }
        
-        [HttpPost]
+        [HttpPost, Authorize(Roles = Roles.Revenda)]
         public async Task<ActionResult<ModulosModel>> Criar([FromBody] CriarModulo ModuloRequest)
         {
             try
@@ -70,7 +70,7 @@ namespace API_Central.Controllers
 
         }
 
-        [HttpGet]
+        [HttpGet, Authorize(Roles = Roles.Revenda)]
         public async Task<ActionResult<IEnumerable<ModulosModel>>> GetXmls()
         {
             try
@@ -90,7 +90,7 @@ namespace API_Central.Controllers
         }
 
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), Authorize(Roles = Roles.Revenda)]
         public async Task<ActionResult<ModulosModel>> BuscarPorId(int id)
         {
             try
@@ -113,7 +113,7 @@ namespace API_Central.Controllers
             }
         }
 
-        [HttpGet("BuscarPorSoftware/{idSoftware}")]
+        [HttpGet("BuscarPorSoftware/{idSoftware}"), Authorize(Roles = Roles.Revenda)]
         public async Task<ActionResult<IEnumerable<RetornoModulo>>> GetPorCnpj(int idSoftware)
         {
             try
@@ -125,8 +125,7 @@ namespace API_Central.Controllers
 
                 IEnumerable<ModulosModel>? ModuloList = await _dalModulo.RecuperarTodosPorAsync(x => x.SoftwareId.Equals(idSoftware));
 
-                if (ModuloList is null || !ModuloList.Any())
-                    return NotFound("Esse software não possui nenhum módulo cadastrado.");
+                if (ModuloList is null || !ModuloList.Any()) return NotFound("Esse software não possui nenhum módulo cadastrado.");
 
 
                 var retornoModulos = ModuloList.Select(modulo => new RetornoModulo
@@ -153,7 +152,7 @@ namespace API_Central.Controllers
             }
         }
 
-        [HttpPut("Atualizar/{id}")]
+        [HttpPut("Atualizar/{id}"), Authorize(Roles = Roles.Revenda)]
         public async Task<ActionResult<string>> AtualizarPorId([FromBody] AtualizarModulo ModuloRequest, int id)
         {
             try
@@ -161,7 +160,6 @@ namespace API_Central.Controllers
                 SoftwaresModel? SoftwareExistente = await _dalSoftwares.RecuperarPorAsync(x => x.Id.Equals(ModuloRequest.SoftwareId));
                 if (SoftwareExistente is null) return BadRequest($"Software não encontrado no banco de Dados!");
 
-               
                 // Primeira, recupera a entidade pelo ID
                 ModulosModel? ModuloExistente = await _dalModulo.RecuperarPorAsync(x => x.Id.Equals(id));
                 // Retorna 404 Not Found se a entidade não existir
@@ -196,7 +194,7 @@ namespace API_Central.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> Remover(int id)
         {
             try
@@ -222,35 +220,5 @@ namespace API_Central.Controllers
                 return StatusCode(500, $"Erro ao tentar remover o recurso. {ex.Message}");
             }
         }
-
-
-        //[HttpPut("AtualizarStatus/{id}")]
-        //public async Task<ActionResult<SoftwaresModel>> AtualizarStatus([FromBody] AtualizarStatusPlanoLicenca softwareRequest, int id)
-        //{
-        //    try
-        //    {
-        //        SoftwaresModel? SoftwareExistente = await _dalModulo.BuscarPorAsync(x => x.Id.Equals(id));
-
-        //        // Retorna 404 Not Found se o recurso não existir
-        //        if (SoftwareExistente is null) return NotFound();
-
-        //        SoftwareExistente.Situacao = softwareRequest.Situacao;
-        //        await _dalModulo.AtualizarAsync(SoftwareExistente);
-
-        //        // Retorna o recursso atualizado dentro de um Ok()
-        //        return Ok(SoftwareExistente);
-             
-        //    }
-        //    catch (ValidationException ex)
-        //    {
-        //        // Retorna um erro de validação com o detalhe da mensagem
-        //        return BadRequest($"Erro de validação: {ex.Message}");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Retorna um erro genérico com o detalhe da mensagem
-        //        return StatusCode(500, $"Erro ao tentar atualizar a entidade. {ex.Message}");
-        //    }
-        //}
     }
 }

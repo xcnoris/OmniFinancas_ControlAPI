@@ -1,4 +1,6 @@
-﻿using DataBase.Data;
+﻿using API_Central.JWTServices;
+using DataBase.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Modelos.EF.Entidade;
 using Modelos.ModelosRequest.Entidade;
@@ -9,8 +11,7 @@ namespace API_Central.Controllers
     /// <summary>
     /// Controlador para gerenciar entidades.
     /// </summary>
-    [ApiController]
-    [Route("api/[controller]")]
+    [ApiController, Route("api/[controller]")]
     public class EntidadeController : ControllerBase
     {
         private readonly DAL<PessoaModel> _dalEntidade;
@@ -19,17 +20,14 @@ namespace API_Central.Controllers
         /// Construtor do controlador EntidadeController.
         /// </summary>
         /// <param name="dalEntidade">Dependência de acesso a dados para EntidadeModel.</param>
-        public EntidadeController(DAL<PessoaModel> dalEntidade)
-        {
-            _dalEntidade = dalEntidade;
-        }
+        public EntidadeController(DAL<PessoaModel> dalEntidade) { _dalEntidade = dalEntidade; }
 
         /// <summary>
         /// Cria uma nova entidade.
         /// </summary>
         /// <param name="entidade">Dados da entidade a ser criada.</param>
         /// <returns>A entidade criada.</returns>
-        [HttpPost]
+        [HttpPost, Authorize(Roles = Roles.Revenda)]
         public async Task<ActionResult<PessoaModel>> CriarEntidade([FromBody] PessoaModel entidade)
         {
             try
@@ -61,7 +59,7 @@ namespace API_Central.Controllers
         /// Busca todas as entidades.
         /// </summary>
         /// <returns>Lista de entidades.</returns>
-        [HttpGet("BuscarTodos")]
+        [HttpGet("BuscarTodos"), Authorize(Roles = Roles.Revenda)]
         public async Task<ActionResult<IEnumerable<PessoaModel>>> BuscarTodos()
         {
             try
@@ -85,7 +83,7 @@ namespace API_Central.Controllers
         /// </summary>
         /// <param name="id">ID da entidade.</param>
         /// <returns>A entidade encontrada.</returns>
-        [HttpGet("BuscarPorId/{id}")]
+        [HttpGet("BuscarPorId/{id}"), Authorize(Roles = Roles.Revenda)]
         public async Task<ActionResult<PessoaModel>> BuscarPorId(int id)
         {
             try
@@ -114,7 +112,7 @@ namespace API_Central.Controllers
         /// <param name="entidade">Dados da entidade a ser atualizada.</param>
         /// <param name="id">ID da entidade.</param>
         /// <returns>A entidade atualizada.</returns>
-        [HttpPut("AtualizarPorId/{id}")]
+        [HttpPut("AtualizarPorId/{id}"), Authorize(Roles.Revenda)]
         public async Task<ActionResult<PessoaModel>> AtualizarPorId([FromBody] AtualizarEntidade atualizarEntidade, int id)
         {
             try
@@ -153,7 +151,7 @@ namespace API_Central.Controllers
         /// <param name="tipoEntidade">Dados para atualizar o tipo da entidade.</param>
         /// <param name="id">ID da entidade.</param>
         /// <returns>A entidade atualizada.</returns>
-        [HttpPut("AtualizarTipo/{id}")]
+        [HttpPut("AtualizarTipo/{id}"), Authorize(Roles = Roles.Revenda)]
         public async Task<ActionResult<PessoaModel>> AtualizarTipo([FromBody] AtualizarTipoEntidade tipoEntidade, int id)
         {
             try
@@ -188,7 +186,7 @@ namespace API_Central.Controllers
         /// <param name="atualizarSituacaoEntidade">dados para atualizar a situação da entidade.</param>
         /// <param name="id">ID da entidade.</param>
         /// <returns>A entidade atualizada.</returns
-        [HttpPut("AtualizarSituacao/{id}")]
+        [HttpPut("AtualizarSituacao/{id}"), Authorize(Roles.Revenda)]
         public async Task<ActionResult<PessoaModel>> AtualizarSituacao([FromBody] AtualizarSituacaoEntidade entidadeRequest, int id)
         {
             try
@@ -223,7 +221,7 @@ namespace API_Central.Controllers
         /// <param name="entidadeRequest">Dados para atualizar o nome da entidade.</param>
         /// <param name="id">ID da entidade.</param>
         /// <returns>A entidade atualizada.</returns>
-        [HttpPut("AtualizarNome/{id}")]
+        [HttpPut("AtualizarNome/{id}"), Authorize(Roles.Revenda)]
         public async Task<ActionResult<PessoaModel>> AtualizarNome([FromBody] AtualizarNomeEntidade entidadeRequest, int id)
         {
             try
@@ -256,7 +254,7 @@ namespace API_Central.Controllers
         /// <param name="entidadeRequest">Dados para atualizar o endereço da entidade.</param>
         /// <param name="id">ID da entidade.</param>
         /// <returns>A entidade atualizada.</returns>
-        [HttpPut("AtualizarEndereco/{id}")]
+        [HttpPut("AtualizarEndereco/{id}"), Authorize(Roles.Revenda)]
         public async Task<ActionResult<PessoaModel>> AtualizarEndereco([FromBody] AtualizarEnderecoEntidade entidadeRequest, int id)
         {
             try
@@ -289,7 +287,7 @@ namespace API_Central.Controllers
         /// <param name="entidadeRequest">Dados para atualizar o telefone da entidade.</param>
         /// <param name="id">ID da entidade.</param>
         /// <returns>A entidade atualizada.</returns>
-        [HttpPut("AtualizarTelefone/{id}")]
+        [HttpPut("AtualizarTelefone/{id}"), Authorize(Roles.Revenda)]
         public async Task<ActionResult<PessoaModel>> AtualizarTelefone([FromBody] AtualizarTelefoneEntidade entidadeRequest, int id)
         {
             try
@@ -321,7 +319,7 @@ namespace API_Central.Controllers
         /// </summary>
         /// <param name="id">ID da entidade.</param>
         /// <returns>Resultado da remoção.</returns>
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize(Roles = Roles.Admin)]
         public async Task<ActionResult<bool>> Remover(int id)
         {
             try

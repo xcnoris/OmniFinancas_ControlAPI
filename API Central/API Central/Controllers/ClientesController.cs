@@ -1,18 +1,17 @@
-﻿using DataBase.Data;
+﻿using API_Central.JWTServices;
+using DataBase.Data;
 using MetodosGerais.ModelsServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Modelos.DTOs.Cliente;
 using Modelos.EF;
 using Modelos.EF.Entidade;
-using Modelos.EF.Lincenca;
 using Modelos.EF.Revenda;
 using System.ComponentModel.DataAnnotations;
 
 namespace API_Central.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
+    [ApiController, Route("api/[controller]")]
     public class ClientesController : ControllerBase
     {
         private readonly DAL<ClientesModel> _dalCliente;
@@ -29,19 +28,16 @@ namespace API_Central.Controllers
             _dalRevenda = dalRevenda;
         }
 
-        [Authorize]
-        [HttpPost]
+        [HttpPost, Authorize(Roles = Roles.Revenda)]
         public async Task<ActionResult<ClientesModel>> CriarCliente([FromBody] DTOCliente ClienteRequest)
         {
             try
             {
                 var entidade = await _dalPessoa.RecuperarPorAsync(e => e.Id == ClienteRequest.EntidadeId);
-                if (entidade is null)
-                    return BadRequest("Entidade (Pessoa) não encontrada.");
+                if (entidade is null) return BadRequest("Entidade (Pessoa) não encontrada.");
 
                 var revenda = await _dalRevenda.RecuperarPorAsync(r => r.Id == ClienteRequest.RevendaId);
-                if (revenda is null)
-                    return BadRequest("Revenda não encontrada.");
+                if (revenda is null) return BadRequest("Revenda não encontrada.");
 
                 ClientesModel NovoCliente = ClienteService.InstanciarCliente(new ClientesModel(), ClienteRequest);
 
@@ -59,8 +55,7 @@ namespace API_Central.Controllers
             }
         }
 
-        [Authorize]
-        [HttpGet]
+        [HttpGet, Authorize(Roles = Roles.Revenda)]
         public async Task<ActionResult<IEnumerable<ClientesModel>>> Listar()
         {
             try
@@ -74,14 +69,13 @@ namespace API_Central.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), Authorize(Roles = Roles.Revenda)]
         public async Task<ActionResult<ClientesModel>> BuscarPorId(int id)
         {
             try
             {
                 var cliente = await _dalCliente.BuscarPorAsync(c => c.Id == id);
-                if (cliente is null)
-                    return NotFound($"Cliente com ID {id} não encontrado.");
+                if (cliente is null) return NotFound($"Cliente com ID {id} não encontrado.");
 
                 return Ok(cliente);
             }
@@ -91,14 +85,13 @@ namespace API_Central.Controllers
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize(Roles = Roles.Revenda)]
         public async Task<ActionResult> AtualizarCliente(int id, [FromBody] ClientesModel clienteAtualizado)
         {
             try
             {
                 var clienteExistente = await _dalCliente.RecuperarPorAsync(c => c.Id == id);
-                if (clienteExistente is null)
-                    return NotFound($"Cliente com ID {id} não encontrado.");
+                if (clienteExistente is null) return NotFound($"Cliente com ID {id} não encontrado.");
 
                 clienteExistente.EntidadeId = clienteAtualizado.EntidadeId;
                 clienteExistente.RevendaId = clienteAtualizado.RevendaId;
@@ -113,14 +106,13 @@ namespace API_Central.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> Remover(int id)
         {
             try
             {
                 var cliente = await _dalCliente.RecuperarPorAsync(c => c.Id == id);
-                if (cliente is null)
-                    return NotFound($"Cliente com ID {id} não encontrado.");
+                if (cliente is null) return NotFound($"Cliente com ID {id} não encontrado.");
 
                 await _dalCliente.DeletarAsync(cliente);
                 return NoContent();

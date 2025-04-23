@@ -1,5 +1,7 @@
 ﻿
+using API_Central.JWTServices;
 using DataBase.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Modelos.EF.Revenda;
 using Modelos.ModelosRequest.Revenda;
@@ -10,8 +12,7 @@ namespace API_Central.Controllers
     /// <summary>
     /// Controlador para gerenciar revenda.
     /// </summary>
-    [ApiController]
-    [Route("api/[controller]")]
+    [ApiController, Route("api/[controller]"), Authorize(Roles = Roles.Admin)]
     public class RevendaController : ControllerBase
     {
         private readonly DAL<RevendaModel> _dalRevenda;

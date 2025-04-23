@@ -1,5 +1,7 @@
+using API_Central.JWTServices;
 using DataBase.Data;
 using MetodosGerais.ModelsServices.Contrato;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Modelos.DTOs.Contrato;
 using Modelos.EF;
@@ -9,8 +11,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace API_Central.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
+    [ApiController, Route("api/[controller]")]
     public class ContratoController : ControllerBase
     {
         private readonly DAL<ContratoModel> _dalContrato;
@@ -27,7 +28,7 @@ namespace API_Central.Controllers
             _dalPlano = dalPlano;
         }
 
-        [HttpPost]
+        [HttpPost, Authorize(Roles = Roles.Revenda)]
         public async Task<ActionResult<ContratoModel>> CriarContrato([FromBody] DTOContrato request)
         {
             try
@@ -55,7 +56,7 @@ namespace API_Central.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet, Authorize(Roles = Roles.Revenda)]
         public async Task<ActionResult<IEnumerable<ContratoModel>>> Listar()
         {
             try
@@ -69,7 +70,7 @@ namespace API_Central.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), Authorize(Roles = Roles.Revenda)]
         public async Task<ActionResult<ContratoModel>> BuscarPorId(int id)
         {
             try
@@ -85,7 +86,7 @@ namespace API_Central.Controllers
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize(Roles = Roles.Revenda)]
         public async Task<ActionResult> AtualizarContrato(int id, [FromBody] ContratoModel contratoAtualizado)
         {
             try
@@ -109,7 +110,7 @@ namespace API_Central.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> Remover(int id)
         {
             try

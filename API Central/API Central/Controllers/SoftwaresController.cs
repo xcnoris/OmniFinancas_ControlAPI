@@ -1,3 +1,4 @@
+using API_Central.JWTServices;
 using DataBase.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,8 +11,7 @@ using System.Xml;
 
 namespace API_Central.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
+    [ApiController, Route("api/[controller]"), Authorize(Roles = Roles.Admin)]
     public class SoftwaresController : ControllerBase
     {
         private readonly DAL<SoftwaresModel> _dalSoftwares;
@@ -147,7 +147,6 @@ namespace API_Central.Controllers
             {
                 RevendaModel? RevendaExistente = await _dalRevenda.RecuperarPorAsync(x => x.Id.Equals(SoftwareRequest.ProprietarioId));
                 if (RevendaExistente is null) return BadRequest($"Revenda não encontrada no banco de Dados!");
-
                
                 // Primeira, recupera a entidade pelo ID
                 var SoftwareExistente = await _dalSoftwares.RecuperarPorAsync(x => x.Equals(id));

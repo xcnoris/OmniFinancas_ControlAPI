@@ -1,5 +1,7 @@
 ﻿
+using API_Central.JWTServices;
 using DataBase.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Modelos.DTOs.UserRevenda;
 using Modelos.EF.Revenda;
@@ -12,8 +14,7 @@ namespace API_Central.Controllers
     /// <summary>
     /// Controlador para gerenciar revenda.
     /// </summary>
-    [ApiController]
-    [Route("api/[controller]")]
+    [ApiController, Route("api/[controller]"), Authorize(Roles = Roles.Revenda)]
     public class UserRevendaController : ControllerBase
     {
         private readonly DAL<RevendaModel> _dalRevenda;
@@ -38,7 +39,7 @@ namespace API_Central.Controllers
         /// <param name="UserRevendaRequest">Dados para revenda a ser criada.</param>
         /// <returns>A revenda criada.</returns>
         [HttpPost]
-        public async Task<ActionResult<UsuariosRevendaModel>> CriarRevenda([FromBody] DTOUserRevenda UserRevendaRequest)
+        public async Task<ActionResult<UsuariosRevendaModel>> CriarUserRevenda([FromBody] DTOUserRevenda UserRevendaRequest)
         {
             try
             {

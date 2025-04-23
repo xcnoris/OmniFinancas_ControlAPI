@@ -1,20 +1,17 @@
-﻿
+﻿using API_Central.JWTServices;
 using DataBase.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Modelos.EF.Lincenca;
 
 namespace API_Central.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
+    [ApiController, Route("api/[controller]"), Authorize(Roles = Roles.Admin)]
     public class PlanosLicencaController : ControllerBase
     {
         private readonly DAL<PlanosLicencaModel> _dal;
 
-        public PlanosLicencaController(DAL<PlanosLicencaModel> dal)
-        {
-            _dal = dal;
-        }
+        public PlanosLicencaController(DAL<PlanosLicencaModel> dal) { _dal = dal; }
 
         [HttpPost]
         public async Task<ActionResult<PlanosLicencaModel>> Criar([FromBody] PlanosLicencaModel plano)
@@ -42,8 +39,7 @@ namespace API_Central.Controllers
         public async Task<ActionResult<PlanosLicencaModel>> BuscarPorId(int id)
         {
             var plano = await _dal.BuscarPorAsync(p => p.Id == id);
-            if (plano == null)
-                return NotFound("Plano não encontrado.");
+            if (plano == null) return NotFound("Plano não encontrado.");
 
             return Ok(plano);
         }
@@ -52,8 +48,7 @@ namespace API_Central.Controllers
         public async Task<IActionResult> Atualizar(int id, [FromBody] PlanosLicencaModel atualizado)
         {
             var plano = await _dal.RecuperarPorAsync(p => p.Id == id);
-            if (plano == null)
-                return NotFound("Plano não encontrado.");
+            if (plano == null) return NotFound("Plano não encontrado.");
 
             plano.Nome = atualizado.Nome;
             plano.QuantidadeDeAcoes = atualizado.QuantidadeDeAcoes;
@@ -67,8 +62,7 @@ namespace API_Central.Controllers
         public async Task<IActionResult> Remover(int id)
         {
             var plano = await _dal.RecuperarPorAsync(p => p.Id == id);
-            if (plano == null)
-                return NotFound("Plano não encontrado.");
+            if (plano == null) return NotFound("Plano não encontrado.");
 
             await _dal.DeletarAsync(plano);
             return NoContent();

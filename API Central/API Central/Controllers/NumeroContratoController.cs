@@ -1,5 +1,7 @@
+using API_Central.JWTServices;
 using DataBase.Data;
 using MetodosGerais.ModelsServices.Contrato;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Modelos.DTOs.NumeroContrato.InPut;
 using Modelos.EF.Contrato;
@@ -7,8 +9,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace API_Central.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
+    [ApiController, Route("api/[controller]")]
     public class NumeroContratoController : ControllerBase
     {
         private readonly DAL<NumeroContratoModel> _dalNumeroContrato;
@@ -20,14 +21,13 @@ namespace API_Central.Controllers
             _dalContrato = dalContrato;
         }
 
-        [HttpPost]
+        [HttpPost, Authorize(Roles = Roles.Revenda)]
         public async Task<ActionResult<string>> CriarNumeroContrato([FromBody] DTONumeroContrato request)
         {
             try
             {
                 var contrato = await _dalContrato.RecuperarPorAsync(c => c.Id.Equals(request.ContratoId));
-                if (contrato is null)
-                    return BadRequest("Contrato associado não encontrado.");
+                if (contrato is null) return BadRequest("Contrato associado não encontrado.");
 
                 NumeroContratoModel NumeroContrato = new NumeroContratoModel()
                 {
@@ -52,7 +52,7 @@ namespace API_Central.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet, Authorize(Roles = Roles.Revenda)]
         public async Task<ActionResult<IEnumerable<NumeroContratoModel>>> ListarTodos()
         {
             try
@@ -66,14 +66,13 @@ namespace API_Central.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), Authorize(Roles = Roles.Revenda)]
         public async Task<ActionResult<DTONumeroContrato>> BuscarPorId(int id)
         {
             try
             {
                 NumeroContratoModel? NumeroContrato = await _dalNumeroContrato.BuscarPorAsync(n => n.Id == id);
-                if (NumeroContrato is null)
-                    return NotFound($"Número de contrato com ID {id} não encontrado.");
+                if (NumeroContrato is null) return NotFound($"Número de contrato com ID {id} não encontrado.");
 
                 return Ok(NumeroContratoService.InstanciarDTONumeroContrato(NumeroContrato));
             }
@@ -83,14 +82,13 @@ namespace API_Central.Controllers
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize(Roles = Roles.Revenda)]
         public async Task<ActionResult> Atualizar(int id, [FromBody] DTONumeroContrato atualizado)
         {
             try
             {
                 NumeroContratoModel? existente = await _dalNumeroContrato.RecuperarPorAsync(n => n.Id == id);
-                if (existente is null)
-                    return NotFound($"Número de contrato com ID {id} não encontrado.");
+                if (existente is null) return NotFound($"Número de contrato com ID {id} não encontrado.");
 
                 NumeroContratoModel ExistenteAtualizado = NumeroContratoService.InstanciarNumeroContrato(existente, atualizado);
               
@@ -103,14 +101,13 @@ namespace API_Central.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> Remover(int id)
         {
             try
             {
                 var existente = await _dalNumeroContrato.RecuperarPorAsync(n => n.Id == id);
-                if (existente is null)
-                    return NotFound($"Número de contrato com ID {id} não encontrado.");
+                if (existente is null) return NotFound($"Número de contrato com ID {id} não encontrado.");
 
                 await _dalNumeroContrato.DeletarAsync(existente);
                 return NoContent();

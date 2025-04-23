@@ -1,18 +1,14 @@
-﻿using System.Threading.Tasks;
-using API_Central.JWTServices;
+﻿using API_Central.JWTServices;
 using API_Central.Services;
 using DataBase.Data;
 using MetodosGerais;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Modelos.DTOs.PlanoLicenca;
-using Modelos.EF.Contrato;
 using Modelos.EF.Login;
 using Modelos.EF.Revenda;
 using Modelos.Enuns;
 
-[ApiController]
-[Route("api/[controller]")]
+[ApiController, Route("api/[controller]")]
 public class AuthController : ControllerBase
 {
     private readonly JwtService _jwtService;
@@ -37,8 +33,7 @@ public class AuthController : ControllerBase
         UserLoginModel? UserExistente = await _dalUserLogin.RecuperarPorAsync(user => user.Email == model.Email);
 
         if (UserExistente == null) return NotFound("Nenhum Usuario Encontrado com esse Nome!");
-        if (UserExistente.HashSenha != HashStringService.GerarHash256(model.Senha))
-            return BadRequest("Senha incorreta!");
+        if (UserExistente.HashSenha != HashStringService.GerarHash256(model.Senha)) return BadRequest("Senha incorreta!");
 
         List<string> ListaClain = new List<string>();
         ListaClain.Add(UserExistente.Tipo_User.ToString());
@@ -49,8 +44,7 @@ public class AuthController : ControllerBase
 
     }
 
-    [Authorize(Roles =Roles.Admin)]
-    [HttpPost("register")]
+    [HttpPost("register"), Authorize(Roles = Roles.Admin)]
     public async Task<IActionResult> Register([FromBody] RegisterModel model)
     {
         UsuariosRevendaModel? userRevenda = await _dalUserRevenda.RecuperarPorAsync(x => x.Id == model.UsuarioRevendaId);
@@ -86,7 +80,7 @@ public class AuthController : ControllerBase
 
     }
 
-    [HttpGet]
+    [HttpGet, Authorize(Roles = Roles.Admin)]
     public async Task<ActionResult<IEnumerable<UserLoginModel>>> ListarTodos()
     {
         try

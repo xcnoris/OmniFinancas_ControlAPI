@@ -1,5 +1,7 @@
-﻿using DataBase.Data;
+﻿using API_Central.JWTServices;
+using DataBase.Data;
 using MetodosGerais.ModelsServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Modelos.DTOs.PlanoLicenca;
 using Modelos.EF;
@@ -9,8 +11,7 @@ using Modelos.Enuns;
 
 namespace API_Central.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
+    [ApiController, Route("api/[controller]")]
     public class LicencasController : ControllerBase
     {
         private readonly DAL<LicencaModel> _dalLicenca;
@@ -34,12 +35,11 @@ namespace API_Central.Controllers
             _dalModulo = dalModulo;
         }
 
-        [HttpPost]
+        [HttpPost, Authorize(Roles = Roles.Revenda)]
         public async Task<ActionResult<DTOLicenca>> Criar([FromBody] DTOLicenca licenca)
         {
             var contrato = await _dalContrato.RecuperarPorAsync(c => c.Id == licenca.ContratoId);
-            if (contrato is null)
-                return BadRequest("Contrato não encontrado.");
+            if (contrato is null) return BadRequest("Contrato não encontrado.");
 
             LicencaModel novaLicenca = LicencaService.InstanciarNumeroContrato(new LicencaModel(), licenca);
             novaLicenca.DataCriacao = DateTime.Now;
@@ -51,7 +51,7 @@ namespace API_Central.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet, Authorize(Roles = Roles.Revenda)]
         public async Task<ActionResult<IEnumerable<LicencaModel>>> Listar()
         {
             var licencas = await _dalLicenca.ListarAsync();
@@ -59,7 +59,7 @@ namespace API_Central.Controllers
         }
 
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), Authorize(Roles = Roles.Revenda)]
         public async Task<ActionResult<LicencaModel>> BuscarPorId(int id)
         {
             var licenca = await _dalLicenca.BuscarPorAsync(l => l.Id == id);
@@ -69,7 +69,7 @@ namespace API_Central.Controllers
             return Ok(licenca);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize(Roles = Roles.Revenda)]
         public async Task<IActionResult> Atualizar(int id, [FromBody] LicencaModel atualizada)
         {
             var existente = await _dalLicenca.RecuperarPorAsync(l => l.Id == id);
@@ -92,7 +92,7 @@ namespace API_Central.Controllers
         }
 
         
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> Remover(int id)
         {
             var existente = await _dalLicenca.RecuperarPorAsync(l => l.Id == id);
