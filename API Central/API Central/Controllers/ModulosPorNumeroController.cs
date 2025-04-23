@@ -88,7 +88,7 @@ namespace API_Central.Controllers
             try
             {
                 var existente = await _dalModulosPorNumero.RecuperarPorAsync(m => m.Id == id);
-                if (existente is null return NotFound("Vínculo não encontrado.");
+                if (existente is null) return NotFound("Vínculo não encontrado.");
 
                 var numero = await _dalNumeroContrato.RecuperarPorAsync(n => n.Id == atualizado.NumeroId);
                 if (numero is null) return BadRequest("Número de contrato não encontrado.");
