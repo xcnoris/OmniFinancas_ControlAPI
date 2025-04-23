@@ -26,6 +26,13 @@ public class AuthController : ControllerBase
         _dalUserRevenda = dalUserRevenda;
     }
 
+
+    [HttpGet("HelloWorld")]
+    public async Task<string> hello()
+    {
+        return "HelloWorld";
+    }
+ 
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginModel model)
     {
@@ -40,8 +47,6 @@ public class AuthController : ControllerBase
 
         var token = _jwtService.GenerateToken(UserExistente, ListaClain);
         return Ok(new { token });
-        
-
     }
 
     [HttpPost("register"), Authorize(Roles = Roles.Admin)]
