@@ -1,7 +1,6 @@
 ﻿using API_Central.Services;
 using DataBase.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -12,6 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Configura o DbContext com PostgreSQL
 builder.Services.AddDbContext<CDIOmniServiceDBContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.WebHost.UseUrls("http://localhost:5005"); // Define a URL base para o servidor  
 
 // JWT - Configuração
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
@@ -36,8 +37,6 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]))
     };
 });
-
-
 
 builder.Services.AddSwaggerGen(x => {
     x.SwaggerDoc("v1", new OpenApiInfo { Title = "Central API - CDI OmniService ", Version = "v1" });
@@ -87,8 +86,6 @@ builder.Services.AddScoped<JwtService>(); // Serviço JWT que você vai criar
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-
 
 var app = builder.Build();
 
