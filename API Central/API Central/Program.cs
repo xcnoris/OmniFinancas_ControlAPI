@@ -13,8 +13,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<CDIOmniServiceDBContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-
-
 // JWT - Configuração
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 builder.Services.AddAuthentication(options =>
@@ -93,6 +91,10 @@ builder.Services.AddSwaggerGen();
 
 
 var app = builder.Build();
+
+var boletosPath = Path.Combine(Directory.GetCurrentDirectory(), "Boletos");
+
+if (!Directory.Exists(boletosPath)) { Directory.CreateDirectory(boletosPath); }
 
 // Servir arquivos da pasta "Boletos"
 app.UseStaticFiles(new StaticFileOptions
