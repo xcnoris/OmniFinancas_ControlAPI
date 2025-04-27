@@ -13,10 +13,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<CDIOmniServiceDBContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-
+var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 
 // JWT - Configuração
-var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -24,9 +23,8 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
-    options.RequireHttpsMetadata = true;
+    options.RequireHttpsMetadata = false; // Muda para false em produção, já que HTTPS é tratado externamente
     options.SaveToken = true;
-
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
@@ -39,11 +37,9 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-
-
+// Swagger
 builder.Services.AddSwaggerGen(x => {
     x.SwaggerDoc("v1", new OpenApiInfo { Title = "Central API - CDI OmniService ", Version = "v1" });
-
     x.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -53,7 +49,6 @@ builder.Services.AddSwaggerGen(x => {
         BearerFormat = "JWT",
         Description = "Insira o token JWT dessa forma: Bearer {token}"
     });
-
     x.AddSecurityRequirement(new OpenApiSecurityRequirement()
     {
         {
@@ -73,7 +68,7 @@ builder.Services.AddSwaggerGen(x => {
     });
 });
 
-// CORS - Exemplo simples
+// CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllOrigins", policy =>
@@ -85,16 +80,20 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddScoped(typeof(DAL<>));
-builder.Services.AddScoped<JwtService>(); // Serviço JWT que você vai criar
+builder.Services.AddScoped<JwtService>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
-
+// Kestrel para aceitar qualquer IP e pegar porta do ambiente
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.ListenAnyIP(
+        int.Parse(Environment.GetEnvironmentVariable("PORT") ?? "5000"));
+});
 
 var app = builder.Build();
 
-// Servir arquivos da pasta "Boletos"
+// Servir arquivos estáticos
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(
@@ -102,20 +101,22 @@ app.UseStaticFiles(new StaticFileOptions
     RequestPath = "/files"
 });
 
-// Middleware
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+// Swagger (opcional: ativar no ambiente de produção também)
+app.UseSwagger();
+app.UseSwaggerUI();
 
+// HTTPS redirection
 app.UseHttpsRedirection();
 
+// CORS
 app.UseCors("AllowAllOrigins");
 
-app.UseAuthentication(); // JWT Auth
+// Autenticação e autorização
+app.UseAuthentication();
 app.UseAuthorization();
 
+// Controllers
 app.MapControllers();
 
+// Rodar aplicação
 app.Run();
