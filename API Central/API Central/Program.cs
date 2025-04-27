@@ -121,4 +121,16 @@ app.UseAuthorization();
 app.MapControllers();
 
 // Rodar aplicação
-app.Run();
+try
+{
+    app.Run();
+}
+catch (Exception ex)
+{
+    // isso tenta imprimir tudo que der para imprimir
+    Console.Error.WriteLine("======== FATAL EXCEPTION ========");
+    Console.Error.WriteLine(ex.ToString());
+    if (ex.InnerException != null)
+        Console.Error.WriteLine("Inner: " + ex.InnerException);
+    throw;
+}
