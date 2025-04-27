@@ -42,8 +42,8 @@ namespace API_Central.Controllers
                     Nome = SoftwareRequest.Nome,
                     Descricao = SoftwareRequest.Descricao,
                     Versao = SoftwareRequest.Versao,
-                    ProprietarioId = SoftwareRequest.ProprietarioId,
-                    Situacao = SoftwareRequest.Situacao,
+                    ProprietarioId = SoftwareRequest.ProprietarioId.Value,
+                    Situacao = SoftwareRequest.Situacao.Value,
                     DataCriacao = DateTime.Now,
                 };
 
@@ -155,12 +155,12 @@ namespace API_Central.Controllers
                 if (SoftwareExistente is null) return NotFound($"Id {id} não existe no banco de dados!");
 
                 // Atualizar os campos da entidade existente com os novos daods
-                SoftwareExistente.Id = SoftwareRequest.Id;
+                SoftwareExistente.Id = SoftwareRequest.Id.Value;
                 SoftwareExistente.Nome = SoftwareRequest.Nome;
                 SoftwareExistente.Descricao = SoftwareRequest.Descricao;
                 SoftwareExistente.Versao = SoftwareRequest.Versao;
-                SoftwareExistente.ProprietarioId = SoftwareRequest.ProprietarioId;
-                SoftwareExistente.Situacao = SoftwareRequest.Situacao;
+                SoftwareExistente.ProprietarioId = SoftwareRequest.ProprietarioId.Value;
+                SoftwareExistente.Situacao = SoftwareRequest.Situacao.Value;
                 SoftwareExistente.DataAtualizacao = DateTime.Now;
 
                 // Chama o método DAL para atualizar a entidade no banco de dados
@@ -229,7 +229,7 @@ namespace API_Central.Controllers
                 // Retorna 404 Not Found se o recurso não existir
                 if (SoftwareExistente is null) return NotFound();
 
-                SoftwareExistente.Situacao = softwareRequest.Situacao;
+                SoftwareExistente.Situacao = softwareRequest.Situacao.Value;
                 await _dalSoftwares.AtualizarAsync(SoftwareExistente);
 
                 // Retorna o recursso atualizado dentro de um Ok()

@@ -36,9 +36,9 @@ namespace MetodosGerais.ModelsServices.Contrato
         public static ContratoModel InstanciarContrato(ContratoModel existente, DTOContrato DTOContrato)
         {
             existente.Id = Convert.ToInt32(DTOContrato.Id);
-            existente.Tipo_PlanoId = DTOContrato.Tipo_PlanoId;
-            existente.ClienteFinalId = DTOContrato.ClienteFinalId;
-            existente.Valor = DTOContrato.Valor;
+            existente.Tipo_PlanoId = DTOContrato.Tipo_PlanoId.Value;
+            existente.ClienteFinalId = DTOContrato.ClienteFinalId.Value;
+            existente.Valor = DTOContrato.Valor.Value;
             existente.DataAtualizacao = DateTime.Now;
 
             return existente;

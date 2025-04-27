@@ -48,8 +48,8 @@ namespace API_Central.Controllers
 
                 UsuariosRevendaModel NovoUserRevenda = new UsuariosRevendaModel
                 {
-                    RevendaId = UserRevendaRequest.RevendaId,
-                    EntidadeId =UserRevendaRequest.EntidadeId,
+                    RevendaId = UserRevendaRequest.RevendaId.Value,
+                    EntidadeId =UserRevendaRequest.EntidadeId.Value,
                     Situacao = Situacao.Ativo,
                     DataCriacao = DateTime.Now,
                     DataAtualizacao = DateTime.Now

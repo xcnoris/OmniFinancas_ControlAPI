@@ -37,9 +37,9 @@ namespace MetodosGerais.ModelsServices
         public static ClientesModel InstanciarCliente(ClientesModel existente, DTOCliente DTOCliente)
         {
             existente.Id = Convert.ToInt32(DTOCliente.Id);
-            existente.EntidadeId = DTOCliente.EntidadeId;
-            existente.RevendaId = DTOCliente.RevendaId;
-            existente.Situacao = DTOCliente.Situacao;
+            existente.EntidadeId = DTOCliente.EntidadeId.Value;
+            existente.RevendaId = DTOCliente.RevendaId.Value;
+            existente.Situacao = DTOCliente.Situacao.Value;
             existente.DataCriacao = DateTime.Now;
             
 

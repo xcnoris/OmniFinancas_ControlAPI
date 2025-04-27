@@ -31,7 +31,7 @@ namespace API_Central.Controllers
 
                 NumeroContratoModel NumeroContrato = new NumeroContratoModel()
                 {
-                    ContratoId = request.ContratoId,
+                    ContratoId = request.ContratoId.Value,
                     Numero =  request.Numero,
                     NomeInstancia = request.NomeInstancia,
                     TokenInstancia = request.TokenInstancia,

@@ -30,7 +30,7 @@ namespace MetodosGerais.ModelsServices.Contrato
 
         public static NumeroContratoModel InstanciarNumeroContrato(NumeroContratoModel existente, DTONumeroContrato DTOnumeroContrato)
         {
-            existente.ContratoId = DTOnumeroContrato.ContratoId;
+            existente.ContratoId = DTOnumeroContrato.ContratoId.Value;
             existente.Numero = DTOnumeroContrato.Numero;
             existente.NomeInstancia = DTOnumeroContrato.NomeInstancia;
             existente.TokenInstancia = DTOnumeroContrato.TokenInstancia;

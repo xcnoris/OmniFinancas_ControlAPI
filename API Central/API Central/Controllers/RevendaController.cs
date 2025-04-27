@@ -4,6 +4,7 @@ using DataBase.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Modelos.EF.Revenda;
+using Modelos.Enuns;
 using Modelos.ModelosRequest.Revenda;
 using System.ComponentModel.DataAnnotations;
 
@@ -36,20 +37,32 @@ namespace API_Central.Controllers
         {
             try
             {
-                RevendaModel? revendaExistente = await _dalRevenda.RecuperarPorAsync(x => x.CNPJ.Equals(revendaRequest.CNPJ));
-                if (revendaExistente is not null) return BadRequest($"Este CNPJ já possui cadastro!");
+                if (revendaRequest.CNPJ is null)
+                    return BadRequest("CNPJ não pode ser nulo!");
 
+                if (revendaRequest.EntidadeId is null)
+                    return BadRequest("EntidadeId não pode ser nulo!");
+
+                // Verifica se já existe uma revenda com o mesmo CNPJ
+                RevendaModel? revendaExistente = await _dalRevenda.RecuperarPorAsync(x => x.CNPJ.Equals(revendaRequest.CNPJ));
+                if (revendaExistente is not null)
+                    return BadRequest("Este CNPJ já possui cadastro!");
+
+                // Cria a nova revenda
                 RevendaModel novaRevenda = new RevendaModel
                 {
-                    EntidadeId = revendaRequest.EntidadeId,
+                    EntidadeId = revendaRequest.EntidadeId.Value, // Aqui assumimos que EntidadeId não é mais nulo
                     CNPJ = revendaRequest.CNPJ,
-                    Situacao = revendaRequest.Situacao,
-                    DataCriacao = DateTime.Now,
+                    DataCriacao = DateTime.Now
                 };
+                if (revendaRequest.Situacao.HasValue)
+                    novaRevenda.Situacao = revendaRequest.Situacao.Value;
+                else
+                    return BadRequest("Situacao nao pode ser nula!");
 
                 await _dalRevenda.AdicionarAsync(novaRevenda);
 
-                // Retornar a revenda criada
+                // Retorna a revenda criada
                 return Ok(novaRevenda);
             }
             catch (UnauthorizedAccessException ex)
@@ -58,15 +71,14 @@ namespace API_Central.Controllers
             }
             catch (ValidationException ex)
             {
-                // Retorna um erro de validação com o detalhe da mensagem
                 return BadRequest($"Erro de validação: {ex.Message}");
             }
             catch (Exception ex)
             {
-                // Retorna um erro genérico com a mensagem da exceção
                 return StatusCode(500, $"Erro ao tentar adicionar a entidade. {ex.Message}");
             }
         }
+
 
         /// <summary>
         /// Buscar todas as revendas.
@@ -136,7 +148,13 @@ namespace API_Central.Controllers
 
                 // Atualizar os campos da revenda existente com os novos dados
                 revendaExistente.CNPJ = revendaRequest.CNPJ;
-                revendaExistente.Situacao = revendaRequest.Situacao;
+
+                if (revendaRequest.Situacao.HasValue)
+                    revendaExistente.Situacao = revendaRequest.Situacao.Value;
+                else
+                    return BadRequest("Situacao nao pode ser nula!");
+
+                
 
                 // Chama o método DAL para atualizar a revenda no banco de dados
                 await _dalRevenda.AtualizarAsync(revendaExistente);
@@ -170,7 +188,10 @@ namespace API_Central.Controllers
                 if (revendaExistente is null) return NotFound($"Não foi encontrada nenhuma revenda com este ID {id}.");
 
                 // Atualizar a situação da revenda existente
-                revendaExistente.Situacao = revendaRequest.Situacao;
+                if (revendaRequest.Situacao.HasValue)
+                    revendaExistente.Situacao = revendaRequest.Situacao.Value;
+                else
+                    return BadRequest("Situacao nao pode ser nula!");
 
                 // Chama o método DAL para atualizar a revenda no banco de dados
                 await _dalRevenda.AtualizarAsync(revendaExistente);

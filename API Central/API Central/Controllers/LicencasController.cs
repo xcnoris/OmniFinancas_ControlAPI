@@ -44,7 +44,7 @@ namespace API_Central.Controllers
             LicencaModel novaLicenca = LicencaService.InstanciarNumeroContrato(new LicencaModel(), licenca);
             novaLicenca.DataCriacao = DateTime.Now;
             novaLicenca.EnderecoMac = licenca.EnderecoMac;
-            novaLicenca.ChaveAtivacao = LicencaService.GerarChaveAtivacao(licenca.ContratoId);
+            novaLicenca.ChaveAtivacao = LicencaService.GerarChaveAtivacao(contrato.Id);
 
             await _dalLicenca.AdicionarAsync(novaLicenca);
             return Ok(licenca);

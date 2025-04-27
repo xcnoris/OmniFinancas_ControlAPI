@@ -37,12 +37,12 @@ namespace API_Central.Controllers
 
                 ModulosModel NovoSoftware = new ModulosModel()
                 {
-                    Identificacao = ModuloRequest.Identificao,
+                    Identificacao = ModuloRequest.Identificao.Value,
                     Nome = ModuloRequest.Nome,
                     Descricao = ModuloRequest.Descricao,
-                    SoftwareId = ModuloRequest.SoftwareId,
-                    Valor = ModuloRequest.Valor,
-                    Situacao = ModuloRequest.Situacao,
+                    SoftwareId = ModuloRequest.SoftwareId.Value,
+                    Valor = ModuloRequest.Valor.Value,
+                    Situacao = ModuloRequest.Situacao.Value,
                     DataCriacao = DateTime.Now,
                 };
 
@@ -166,13 +166,13 @@ namespace API_Central.Controllers
                 if (ModuloExistente is null) return NotFound($"Id {id} não existe no banco de dados!");
 
                 // Atualizar os campos da entidade existente com os novos daods
-                ModuloExistente.Id = ModuloRequest.Id;
-                ModuloExistente.Identificacao = ModuloRequest.Identificacao;
+                ModuloExistente.Id = ModuloRequest.Id.Value;
+                ModuloExistente.Identificacao = ModuloRequest.Identificacao.Value;
                 ModuloExistente.Nome = ModuloRequest.Nome;
                 ModuloExistente.Descricao = ModuloRequest.Descricao;
-                ModuloExistente.SoftwareId = ModuloRequest.SoftwareId;
-                ModuloExistente.Valor = ModuloRequest.Valor;
-                ModuloExistente.Situacao = ModuloRequest.Situacao;
+                ModuloExistente.SoftwareId = ModuloRequest.SoftwareId.Value;
+                ModuloExistente.Valor = ModuloRequest.Valor.Value;
+                ModuloExistente.Situacao = ModuloRequest.Situacao.Value;
                 ModuloExistente.DataAtualizacao = DateTime.Now;
 
                 // Chama o método DAL para atualizar a entidade no banco de dados

@@ -3,6 +3,7 @@ using DataBase.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Modelos.EF.Entidade;
+using Modelos.Enuns;
 using Modelos.ModelosRequest.Entidade;
 using System.ComponentModel.DataAnnotations;
 
@@ -124,8 +125,16 @@ namespace API_Central.Controllers
                 entidadeExistente.Nome = atualizarEntidade.Nome;
                 entidadeExistente.Endereco = atualizarEntidade.Endereco;
                 entidadeExistente.Telefone = atualizarEntidade.Telefone;
-                entidadeExistente.Situacao = atualizarEntidade.Situacao;
-                entidadeExistente.TipoEntidade = atualizarEntidade.Tipo_Entidade;
+                if (atualizarEntidade.Situacao.HasValue)
+                    entidadeExistente.Situacao = atualizarEntidade.Situacao.Value;
+                else
+                    return BadRequest("Situação da entidade é obrigatório.");
+
+                if (atualizarEntidade.Tipo_Entidade.HasValue)
+                    entidadeExistente.TipoEntidade = atualizarEntidade.Tipo_Entidade.Value;
+                else
+                    return BadRequest("Tipo Entidade da entidade é obrigatório.");
+               
 
                 // Chama o método DAL para atualizar a entidade no banco de dados
                 await _dalEntidade.AtualizarAsync(entidadeExistente);
@@ -156,11 +165,19 @@ namespace API_Central.Controllers
         {
             try
             {
+               
+
+
                 PessoaModel? entidadeExistente = await _dalEntidade.RecuperarPorAsync(x => x.Id.Equals(tipoEntidade.Id));
                 if (entidadeExistente is null) return BadRequest($"Entidade não encontrada no banco de Dados!");
 
+
                 // Atualizar o tipo da entidade existente com o novo tipo
-                entidadeExistente.TipoEntidade = tipoEntidade.TipoEntidade;
+                if (tipoEntidade.TipoEntidade.HasValue)
+                    entidadeExistente.TipoEntidade = tipoEntidade.TipoEntidade.Value;
+                else
+                    return BadRequest("Tipo da entidade é obrigatório.");
+                
 
                 // Chama o método DAL para atualizar a entidade no banco de dados
                 await _dalEntidade.AtualizarAsync(entidadeExistente);
@@ -195,7 +212,12 @@ namespace API_Central.Controllers
                 if (entidadeExistente is null) return BadRequest($"Entidade não encontrada no banco de Dados!");
 
                 // Atualizar o tipo da entidade existente com o novo tipo
-                entidadeExistente.Situacao = entidadeRequest.Situacao;
+
+                if (entidadeRequest.Situacao.HasValue)
+                    entidadeExistente.Situacao = entidadeRequest.Situacao.Value;
+                else
+                    return BadRequest("Situação da entidade é obrigatório.");
+               
 
                 // Chama o método DAL para atualizar a entidade no banco de dados
                 await _dalEntidade.AtualizarAsync(entidadeExistente);

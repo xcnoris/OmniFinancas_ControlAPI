@@ -54,8 +54,8 @@ namespace MetodosGerais.ModelsServices
         public static LicencaModel InstanciarNumeroContrato(LicencaModel existente, DTOLicenca DTOLicenca)
         {
             existente.ChaveAtivacao = DTOLicenca.ChaveAtivacao;
-            existente.ContratoId = DTOLicenca.ContratoId;
-            existente.Situacao = DTOLicenca.Situacao;
+            existente.ContratoId = DTOLicenca.ContratoId.Value;
+            existente.Situacao = DTOLicenca.Situacao.Value;
             existente.DataAtualizacao = DateTime.Now;
 
             return existente;
