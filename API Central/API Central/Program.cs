@@ -1,7 +1,6 @@
 ﻿using API_Central.Services;
 using DataBase.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -38,6 +37,11 @@ builder.Services.AddAuthentication(options =>
 });
 
 // Swagger
+
+
+
+
+
 builder.Services.AddSwaggerGen(x => {
     x.SwaggerDoc("v1", new OpenApiInfo { Title = "Central API - CDI OmniService ", Version = "v1" });
     x.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -79,11 +83,6 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddScoped(typeof(DAL<>));
-builder.Services.AddScoped<JwtService>();
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-
 // Kestrel para aceitar qualquer IP e pegar porta do ambiente
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {
@@ -91,25 +90,31 @@ builder.WebHost.ConfigureKestrel(serverOptions =>
         int.Parse(Environment.GetEnvironmentVariable("PORT") ?? "5000"));
 });
 
-var app = builder.Build();
+
+
+
+});
+var boletosPath = Path.Combine(Directory.GetCurrentDirectory(), "Boletos");
+// Servir arquivos estáticos
+if (!Directory.Exists(boletosPath)) { Directory.CreateDirectory(boletosPath); }
 
 // Servir arquivos estáticos
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(
         Path.Combine(Directory.GetCurrentDirectory(), "Boletos")),
-    RequestPath = "/files"
-});
-
 // Swagger (opcional: ativar no ambiente de produção também)
 app.UseSwagger();
+app.UseSwaggerUI();
+// Swagger (opcional: ativar no ambiente de produção também)
+app.UseSwagger();
+// HTTPS redirection
 app.UseSwaggerUI();
 
 // HTTPS redirection
 app.UseHttpsRedirection();
 
-// CORS
-app.UseCors("AllowAllOrigins");
+app.UseAuthentication(); // JWT Auth
 
 // Autenticação e autorização
 app.UseAuthentication();

@@ -1,28 +1,23 @@
-﻿using Azure.Core;
-using DataBase.Data;
+﻿using DataBase.Data;
 using Microsoft.AspNetCore.Mvc;
 using Modelos;
-using Modelos.DTOs.PlanoLicenca;
 using Modelos.EF.Lincenca;
 using Modelos.Enuns;
 
 namespace API_Central.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
+    [ApiController, Route("api/[controller]")]
     public class BoletoPDFController : ControllerBase
     {
         private readonly string _diretorioBoletos;
         private readonly DAL<LicencaModel> _dalLicenca;
 
-        public BoletoPDFController(
-            DAL<LicencaModel> dalLicenca)
+        public BoletoPDFController(DAL<LicencaModel> dalLicenca)
         {
             _dalLicenca = dalLicenca;
             _diretorioBoletos = Environment.GetEnvironmentVariable("DIRETORIO_BOLETOS") ?? "Boletos";
 
-            if (!Directory.Exists(_diretorioBoletos))
-                Directory.CreateDirectory(_diretorioBoletos);
+            if (!Directory.Exists(_diretorioBoletos)) Directory.CreateDirectory(_diretorioBoletos);
         }
 
         [HttpPost("upload")]
@@ -34,22 +29,14 @@ namespace API_Central.Controllers
             if (licencaExistente.Situacao != SituacaoLicenca.Ativa) return BadRequest("Licença não está ativa.");
             if (licencaExistente.EnderecoMac != request.EnderecoMAC) return BadRequest("Endereço Mac Errado!");
 
-
             try
             {
                 // Verifica se a string Base64 é válida
-                if (string.IsNullOrWhiteSpace(request.Base64))
-                    return BadRequest("A string Base64 não pode estar vazia.");
+                if (string.IsNullOrWhiteSpace(request.Base64)) return BadRequest("A string Base64 não pode estar vazia.");
 
                 byte[] pdfBytes;
-                try
-                {
-                    pdfBytes = Convert.FromBase64String(request.Base64);
-                }
-                catch (FormatException)
-                {
-                    return BadRequest("Formato Base64 inválido.");
-                }
+                try { pdfBytes = Convert.FromBase64String(request.Base64); }
+                catch (FormatException) { return BadRequest("Formato Base64 inválido."); }
 
                 // Formatar a data corretamente (yyyyMMddHHmmss)
                 string formattedDate = DateTime.Now.ToString("dd-MM-yyyyHHmmss");
@@ -69,10 +56,7 @@ namespace API_Central.Controllers
 
                 return Ok(new { message = "Upload realizado com sucesso!", url = fileUrl });
             }
-            catch (Exception ex)
-            {
-                return BadRequest($"Erro ao salvar arquivo: {ex.Message}");
-            }
+            catch (Exception ex) { return BadRequest($"Erro ao salvar arquivo: {ex.Message}"); }
         }
     }
 }
