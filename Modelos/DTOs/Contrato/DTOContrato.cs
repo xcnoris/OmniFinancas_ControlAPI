@@ -11,9 +11,9 @@ namespace Modelos.DTOs.Contrato
     public class DTOContrato
     {
         public int? Id { get; set; }
-        public int Tipo_PlanoId { get; set; }
-        public int ClienteFinalId { get; set; }
-        public Decimal Valor { get; set; }
+        public int? Tipo_PlanoId { get; set; }
+        public int? ClienteFinalId { get; set; }
+        public Decimal? Valor { get; set; }
 
     }
 }

@@ -15,10 +15,10 @@ namespace Modelos.DTOs.Cliente
     {
         public int? Id { get; set; }
 
-        public int EntidadeId { get; set; }
+        public int? EntidadeId { get; set; }
 
-        public int RevendaId { get; set; }
+        public int? RevendaId { get; set; }
 
-        public Situacao Situacao { get; set; }
+        public Situacao? Situacao { get; set; }
     }
 }

@@ -9,6 +9,6 @@ namespace Modelos.ModelosRequest.Revenda
 {
     public class AtualizarSituacaoRevenda
     {
-        public Situacao Situacao { get; set; }
+        public Situacao? Situacao { get; set; }
     }
 }

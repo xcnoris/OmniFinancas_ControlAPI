@@ -4,6 +4,6 @@ namespace Modelos.ModelosRequest.Licenca
 {
     public class AtualizarStatusPlanoLicenca
     {
-        public Situacao Situacao { get; set; }
+        public Situacao? Situacao { get; set; }
     }
 }

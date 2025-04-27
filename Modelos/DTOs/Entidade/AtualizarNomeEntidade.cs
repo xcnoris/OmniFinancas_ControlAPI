@@ -8,10 +8,10 @@
         /// <summary>
         /// Identificador da entidade.
         /// </summary>
-        public int Id { get; set; }
+        public int? Id { get; set; }
         /// <summary>
         /// Novo nome da entidade.
         /// </summary>
-        public string Nome { get; set; }
+        public string? Nome { get; set; }
     }
 }

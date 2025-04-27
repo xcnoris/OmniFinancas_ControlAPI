@@ -14,10 +14,10 @@ namespace Modelos.ModelosRequest.Entidade
         /// <summary>
         /// Identificador da entidade.
         /// </summary>
-        public int Id { get; set; }
+        public int? Id { get; set; }
         /// <summary>
         /// Novo telefone da entidade.
         /// </summary>
-        public string Telefone { get; set; }
+        public string? Telefone { get; set; }
     }
 }

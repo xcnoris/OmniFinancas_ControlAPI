@@ -13,9 +13,9 @@ namespace Modelos.DTOs.UserRevenda
     {
         public int? Id { get; set; }
 
-        public int RevendaId { get; set; }
+        public int? RevendaId { get; set; }
 
         // Nesse caso vai ser uma entidade com o tipo Fisica
-        public int EntidadeId { get; set; }
+        public int? EntidadeId { get; set; }
     }
 }

@@ -2,7 +2,7 @@
 {
     public class DTORequestMensagem
     {
-        public string number { get; set; }
-        public string text { get; set; }
+        public string? number { get; set; }
+        public string? text { get; set; }
     }
 }

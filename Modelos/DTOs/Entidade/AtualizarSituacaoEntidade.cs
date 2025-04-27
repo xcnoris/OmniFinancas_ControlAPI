@@ -15,10 +15,10 @@ namespace Modelos.ModelosRequest.Entidade
         /// <summary>
         /// Identificador da entidade.
         /// </summary>
-        public int Id { get; set; }
+        public int? Id { get; set; }
         /// <summary>
         /// Nova situação da entidade.
         /// </summary>
-        public Situacao Situacao { get; set; }
+        public Situacao? Situacao { get; set; }
     }
 }

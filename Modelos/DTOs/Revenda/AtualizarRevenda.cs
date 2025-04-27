@@ -9,7 +9,7 @@ namespace Modelos.ModelosRequest.Revenda
 {
     public class AtualizarRevenda
     {
-        public string CNPJ { get; set; }
-        public Situacao Situacao { get; set; }
+        public string? CNPJ { get; set; }
+        public Situacao? Situacao { get; set; }
     }
 }

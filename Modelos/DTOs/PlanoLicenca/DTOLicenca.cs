@@ -12,13 +12,13 @@ namespace Modelos.DTOs.PlanoLicenca
         /// </summary>
         public string? ChaveAtivacao { get; set; }
 
-        public int ContratoId { get; set; }
+        public int? ContratoId { get; set; }
 
-        public string EnderecoMac { get; set; }
+        public string? EnderecoMac { get; set; }
         /// <summary>
         /// Situação da licença (ativa, expirada, cancelada).
         /// </summary>
-        public SituacaoLicenca Situacao { get; set; }
+        public SituacaoLicenca? Situacao { get; set; }
 
     }
 }

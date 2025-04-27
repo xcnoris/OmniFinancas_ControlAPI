@@ -4,6 +4,6 @@ namespace Modelos.ModelosRequest.Software
 {
     public class AtualizarStatusSoftware
     {
-        public Situacao Situacao { get; set; }
+        public Situacao? Situacao { get; set; }
     }
 }
