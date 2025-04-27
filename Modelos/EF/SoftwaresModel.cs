@@ -7,7 +7,7 @@ namespace Modelos.EF
     {
         public int Id { get; set; }
         public string Nome { get; set; }
-        public string Descrição { get; set; }
+        public string Descricao { get; set; }
         public string Versao { get; set; }
         public int ProprietarioId { get; set; }
         public virtual RevendaModel? Proprietario { get; set; }

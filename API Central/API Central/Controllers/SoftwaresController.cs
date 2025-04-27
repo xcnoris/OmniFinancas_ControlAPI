@@ -14,6 +14,7 @@ namespace API_Central.Controllers
     [ApiController, Route("api/[controller]"), Authorize(Roles = Roles.Admin)]
     public class SoftwaresController : ControllerBase
     {
+
         private readonly DAL<SoftwaresModel> _dalSoftwares;
         private readonly DAL<RevendaModel> _dalRevenda;
         public SoftwaresController(
@@ -39,7 +40,7 @@ namespace API_Central.Controllers
                 SoftwaresModel NovoSoftware = new SoftwaresModel()
                 {
                     Nome = SoftwareRequest.Nome,
-                    Descrição = SoftwareRequest.Descrição,
+                    Descricao = SoftwareRequest.Descricao,
                     Versao = SoftwareRequest.Versao,
                     ProprietarioId = SoftwareRequest.ProprietarioId,
                     Situacao = SoftwareRequest.Situacao,
@@ -156,7 +157,7 @@ namespace API_Central.Controllers
                 // Atualizar os campos da entidade existente com os novos daods
                 SoftwareExistente.Id = SoftwareRequest.Id;
                 SoftwareExistente.Nome = SoftwareRequest.Nome;
-                SoftwareExistente.Descrição = SoftwareRequest.Descrição;
+                SoftwareExistente.Descricao = SoftwareRequest.Descricao;
                 SoftwareExistente.Versao = SoftwareRequest.Versao;
                 SoftwareExistente.ProprietarioId = SoftwareRequest.ProprietarioId;
                 SoftwareExistente.Situacao = SoftwareRequest.Situacao;
