@@ -1,0 +1,21 @@
+﻿# Etapa de build com SDK 8.0
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+# Copia o csproj e restaura pacotes
+COPY ["API Central/API Central/API Central.csproj", "API Central/API Central/"]
+RUN dotnet restore "API Central/API Central/API Central.csproj"
+
+# Copia todo o restante do código e publica
+COPY . .
+WORKDIR "/src/API Central/API Central"
+RUN dotnet publish -c Release -o /app/publish
+
+# Etapa final: runtime oficial do .NET 8 GA
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+WORKDIR /app
+COPY --from=build /app/publish .
+
+# Exponha a porta que o EasyPanel usará
+EXPOSE 5106
+ENTRYPOINT ["dotnet", "API Central.dll"]
