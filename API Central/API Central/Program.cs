@@ -85,11 +85,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
 // Kestrel para aceitar qualquer IP e pegar porta do ambiente
-builder.WebHost.ConfigureKestrel(serverOptions =>
-{
-    serverOptions.ListenAnyIP(
-        int.Parse(Environment.GetEnvironmentVariable("PORT") ?? "5000"));
-});
+//builder.WebHost.ConfigureKestrel(serverOptions =>
+//{
+//    serverOptions.ListenAnyIP(
+//        int.Parse(Environment.GetEnvironmentVariable("PORT") ?? "5000"));
+//    serverOptions.ListenAnyIP(5001, listenOptions =>   // HTTPS
+//    listenOptions.UseHttps());                     // usa certificado de dev
+//});
 
 var app = builder.Build();
 var boletosPath = Path.Combine(Directory.GetCurrentDirectory(), "Boletos");
